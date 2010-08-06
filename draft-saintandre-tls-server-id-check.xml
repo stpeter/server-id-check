@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="August" day="5" year="2010"/>
+    <date month="August" day="6" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -82,7 +82,7 @@
 
       <section title="Scope" anchor="scope">
         <section anchor="in-scope" title="In Scope">
-          <t>This document applies only to server identities associated with fully-qualified DNS domain names, only to TLS or DTLS (or the older Secure Sockets Layer technology), and only to PKIX-based systems.  As a result, the scenarios described in the following section are out of scope for this specification (although they might be addressed by future specifications).</t>
+          <t>This document applies only to server identities associated with fully-qualified DNS domain names, only to TLS or DTLS (or the older Secure Sockets Layer (SSL) technology), and only to PKIX-based systems.  As a result, the scenarios described in the following section are out of scope for this specification (although they might be addressed by future specifications).</t>
         </section>
         <section anchor="out-of-scope" title="Out of Scope">
           <t>The following topics are out of scope for this specification:</t>
@@ -106,7 +106,7 @@
 
                 <vspace blankLines="1"/> 
 
-                Furthermore, we focus here on the authentication of application services, not specific resources located at such services, e.g., a specific web page that can be access at a particular Uniform Resource Identifier <xref target='URI'/> whose authority component is the DNS domain name of the application service.  We also do not address identifiers derived from Naming Authority Pointer (NAPTR) DNS resource records <xref target='NAPTR'/> and related technologies such as <xref target='S-NAPTR'/>, since such identifiers cannot be validated in a trusted manner in the absence of <xref target='DNSSEC'/>.
+                Furthermore, we focus here on the verification of application service identities, not specific resources located at such services, e.g., a specific web page that can be accessed at a particular Uniform Resource Identifier <xref target='URI'/> whose authority component is the DNS domain name of the application service.  We also do not address identifiers derived from Naming Authority Pointer (NAPTR) DNS resource records <xref target='NAPTR'/> and related technologies such as <xref target='S-NAPTR'/>, since such identifiers cannot be validated in a trusted manner in the absence of <xref target='DNSSEC'/>.
 
                 <vspace blankLines="1"/> 
 
@@ -355,7 +355,7 @@ cn=www.example.com,c=GB,ou=Web Services
           <t>If the client finds no presented identifier that matches any of the reference identifiers and a human user has not permanently accepted the certificate for this application service during a previous connection attempt, the client MUST NOT consider the certificate to include a validated identity for the application service.</t>
           <t>Instead, the client MUST proceed as follows.</t>
           <section title="Interactive User Agent" anchor="verify-outcome-uncached-interactive">
-            <t>If the client is an interactive client that is directly controlled by a natural person, then it MUST either do one of the following:</t>
+            <t>If the client is an interactive client that is directly controlled by a natural person, then it MUST do one of the following:</t>
             <t>
               <list style='numbers'>
                 <t>Automatically terminate the connection with a bad certificate error; or<vspace blankLines='1'/></t>
@@ -469,18 +469,16 @@ cn=www.example.com,c=GB,ou=Web Services
 <format type='TXT' octets='24013' target='ftp://ftp.isi.edu/in-notes/rfc2782.txt' />
 </reference>
 
-<reference anchor='IDNA2003'>
+<reference anchor='IDNA-DEFS'>
 <front>
-<title>Internationalizing Domain Names in Applications (IDNA)</title>
-<author initials='P.' surname='Faltstrom' fullname='P. Faltstrom'>
+<title>Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework</title>
+<author initials='J.' surname='Klensin' fullname='J. Klensin'>
 <organization /></author>
-<author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
-<organization /></author>
-<author initials='A.' surname='Costello' fullname='A. Costello'>
-<organization /></author>
-<date month='March' year='2003' /></front>
-<seriesInfo name='RFC' value='3490' />
-<format type='TXT' octets='51943' target='ftp://ftp.isi.edu/in-notes/rfc3490.txt' />
+<date year='2010' month='August' />
+<abstract>
+<t>This document is one of a collection that, together, describe the protocol and usage context for a revision of Internationalized Domain Names for Applications (IDNA), superseding the earlier version.  It describes the document collection and provides definitions and other material that are common to the set. [STANDARDS TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='5890' />
+<format type='TXT' octets='54245' target='http://www.rfc-editor.org/rfc/rfc5890.txt' />
 </reference>
 
 <reference anchor='KEYWORDS'>
@@ -840,16 +838,18 @@ specifications of each URI scheme.
 <format type='TXT' octets='227640' target='ftp://ftp.isi.edu/in-notes/rfc3501.txt' />
 </reference>
 
-<reference anchor='IDNA-DEFS'>
+<reference anchor='IDNA2003'>
 <front>
-<title>Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework</title>
-<author initials='J.' surname='Klensin' fullname='J. Klensin'>
+<title>Internationalizing Domain Names in Applications (IDNA)</title>
+<author initials='P.' surname='Faltstrom' fullname='P. Faltstrom'>
 <organization /></author>
-<date year='2010' month='August' />
-<abstract>
-<t>This document is one of a collection that, together, describe the protocol and usage context for a revision of Internationalized Domain Names for Applications (IDNA), superseding the earlier version.  It describes the document collection and provides definitions and other material that are common to the set. [STANDARDS TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='5890' />
-<format type='TXT' octets='54245' target='http://www.rfc-editor.org/rfc/rfc5890.txt' />
+<author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
+<organization /></author>
+<author initials='A.' surname='Costello' fullname='A. Costello'>
+<organization /></author>
+<date month='March' year='2003' /></front>
+<seriesInfo name='RFC' value='3490' />
+<format type='TXT' octets='51943' target='ftp://ftp.isi.edu/in-notes/rfc3490.txt' />
 </reference>
 
 <reference anchor='IP'>
