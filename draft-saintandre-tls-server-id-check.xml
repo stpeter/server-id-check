@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="October" day="6" year="2010"/>
+    <date month="October" day="7" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -91,7 +91,7 @@
       </section>
 
       <section title="Applicability" anchor="applicability">
-        <t>This document does not supersede the rules for certificate validation provided in <xref target='PKIX'/>.  Specifically, in order to ensure proper authentication, application clients need to verify the entire certification path, because this document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificate used to validate the server certificate.</t>
+        <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>, which governs any certificate-related topic on which this document is silent (e.g., certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths).  Specifically, in order to ensure proper authentication, application clients need to verify the entire certification path, because this document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificate used to validate the server certificate.</t>
         <t>This document also does not supersede the rules for verifying server identity provided in existing application protocol specifications, such as those mentioned under <xref target='prior'/>.  However, it is the intent of the authors that the best current practices described here can be referenced by future specifications.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
       </section>
 
@@ -250,7 +250,7 @@
 +-----------+-----------+---------------+
           ]]></artwork>
         </figure>
-        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Protocol specifications that reference this document MUST specify which identifiers are mandatory-to-implement by servers and clients, which identifiers are to be preferred by application service providers, and which identifiers ought to be supported by certificate issuers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability); however, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology.</t>
+        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Protocol specifications that reference this document MUST specify which identifiers are mandatory-to-implement by servers and clients, which identifiers are to be preferred by application service providers, and which identifiers ought to be supported by certificate issuers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
       </section>
       <section title="DNS Domain Names" anchor="names-dns">
         <t>For the purposes of this specification, the name of an application service MUST be a DNS domain name that conforms to one of the following forms:</t>
@@ -293,7 +293,8 @@ cn=www.example.com,c=GB,ou=Web Services
           <t>The certificate MAY include other application-specific identifiers for types that were defined before publication of <xref target='SRVNAME'/> (e.g., XmppAddr for <xref target='XMPP'/>) or for which service names or URI schemes do not exist; however, such application-specific identifiers are not generally applicable and therefore are out of scope for this specification.<vspace blankLines='1'/></t>
           <t>Even though many deployed clients still check for the CN-ID within the certificate subject name, the certificate SHOULD NOT represent the server's fully-qualified DNS domain name in a CN-ID.<vspace blankLines='1'/></t>
           <t>The certificate MAY contain more than one DNS-ID, but SHOULD NOT contain more than one CN-ID.<vspace blankLines='1'/></t>
-          <t>The fully-qualified DNS domain name portion of a DNS-ID or CN-ID MAY contain one instance of the wildcard character '*', but only as the complete left-most label of the domain name component of the identifier (following the definition of "label" from <xref target='DNS'/>).  Specifications that reference the rules defined in this document can specify that the wildcard character is not allowed in certificates used by the relevant application protocol or community of interest.<vspace blankLines='1'/></t>
+          <t>The fully-qualified DNS domain name portion of a DNS-ID or CN-ID MAY contain one instance of the wildcard character '*', but only as the complete left-most label of the domain name component of the identifier (following the definition of "label" from <xref target='DNS'/>).  Note well that this rule is more restrictive than the rule from several of the specifications mentioned under <xref target='prior'/>, because allowing the wildcard character in component fragments (e.g., *oo.example.com, f*o.example.com, foo*.example.com, and perhaps even f*b*r.example.com) complicates the logic for DNS domain name matching.<vspace blankLines='1'/></t>
+          <t>Specifications that reference the rules defined in this document can specify that the wildcard character is not allowed in certificates used by the relevant application protocol or community of interest.<vspace blankLines='1'/></t>
         </list>
       </t>
     </section>
@@ -374,11 +375,11 @@ cn=www.example.com,c=GB,ou=Web Services
         <section title="Case #1: Match Found" anchor="verify-outcome-matched">
           <t>If the client has found a presented identifier that matches a reference identifier, matching has succeeded.  In this case, the client MUST use the matched reference identifier as the validated identity of the server.</t>
         </section>
-        <section title="Case #2: No Match Found, Memorized Certificate" anchor="verify-outcome-mem">
-          <t>If the client does not find a presented identifier matching any of the reference identifiers, and (a) a human user has previously accepted (and the client has memorized) a certificate for this application service during a previous interaction with the service or (b) a certificate has been memorized via configuration settings, then the client MUST verify that the presented certificate is the same as the memorized certificate.  If the presented certificate is not the same as the memorized certificate then the client MUST proceed as described under <xref target='verify-outcome-fallback'/>.</t>
+        <section title="Case #2: No Match Found, Name Association Cached" anchor="verify-outcome-cache">
+          <t>If the client does not find a presented identifier matching any of the reference identifiers, but has previously associated one of the reference identifiers with the certificate (a) because of positive acceptance by a human user during a previous interaction with this application service or (b) because of configuration settings, then the server identity check succeeds.  The cached name association needs to take account of both the certificate presented and the context in which it was accepted or configured (where the context includes the chain of certificates from the presented certificate to the trust anchor).</t>
         </section>
-        <section title="Case #3: No Match Found, No Memorized Certificate" anchor="verify-outcome-nomem">
-          <t>If the client does not find a presented identifier matching any of the reference identifiers, and the client has not previously memorized a certificate for this application service based on user acceptance or configuration, then the client MUST proceed as described under <xref target='verify-outcome-fallback'/>.</t>
+        <section title="Case #3: No Match Found, No Cached Name Association" anchor="verify-outcome-nocache">
+          <t>If the client does not find a presented identifier matching any of the reference identifiers, and the client has not previously associated one of the reference identifiers with the certificate, then the client MUST proceed as described under <xref target='verify-outcome-fallback'/>.</t>
         </section>
         <section title="Fallback" anchor="verify-outcome-fallback">
           <t>If the client is an interactive client that is directly controlled by a human user, then it SHOULD inform the user of the identity mismatch and automatically terminate the connection with a bad certificate error; this behavior is preferable because it prevents users from inadvertently bypassing security protections in hostile situations.</t>
@@ -714,21 +715,29 @@ specifications of each URI scheme.
 <format type='TXT' octets='56014' target='ftp://ftp.isi.edu/in-notes/rfc4347.txt' />
 </reference>
 
+<reference anchor='EV-CERTS' target='http://www.cabforum.org/Guidelines_v1_2.pdf'>
+<front>
+<title>Guidelines For The Issuance And Management Of Extended Validation Certificates</title>
+<author>
+<organization>CA/Browser Forum</organization>
+</author>
+<date year='2009' month='October' />
+</front>
+<format type='PDF' target='http://www.cabforum.org/Guidelines_v1_2.pdf' />
+</reference>
+
 <reference anchor='GIST'>
 <front>
 <title>GIST: General Internet Signalling Transport</title>
-<author initials='H' surname='Schulzrinne' fullname='Henning Schulzrinne'>
-    <organization />
-</author>
-<author initials='M' surname='Stiemerling' fullname='Martin Stiemerling'>
-    <organization />
-</author>
-<date month='June' day='3' year='2009' />
-<abstract><t>This document specifies protocol stacks for the routing and transport of per-flow signalling messages along the path taken by that flow through the network.  The design uses existing transport and security protocols under a common messaging layer, the General Internet Signalling Transport (GIST), which provides a common service for diverse signalling applications.  GIST does not handle signalling application state itself, but manages its own internal state and the configuration of the underlying transport and security protocols to enable the transfer of messages in both directions along the flow path.  The combination of GIST and the lower layer transport and security protocols provides a solution for the base protocol component of the "Next Steps in Signalling" framework.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-nsis-ntlp-20' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-nsis-ntlp-20.txt' />
+<author initials='H.' surname='Schulzrinne' fullname='H. Schulzrinne'>
+<organization /></author>
+<author initials='R.' surname='Hancock' fullname='R. Hancock'>
+<organization /></author>
+<date year='2010' month='October' />
+<abstract>
+<t>This document specifies protocol stacks for the routing and transport of per-flow signalling messages along the path taken by that flow through the network.  The design uses existing transport and security protocols under a common messaging layer, the General Internet Signalling Transport (GIST), which provides a common service for diverse signalling applications.  GIST does not handle signalling application state itself, but manages its own internal state and the configuration of the underlying transport and security protocols to enable the transfer of messages in both directions along the flow path.  The combination of GIST and the lower layer transport and security protocols provides a solution for the base protocol component of the "Next Steps in Signalling" (NSIS) framework.  This document defines an Experimental Protocol for the Internet community.</t></abstract></front>
+<seriesInfo name='RFC' value='5971' />
+<format type='TXT' octets='381127' target='http://www.rfc-editor.org/rfc/rfc5971.txt' />
 </reference>
 
 <reference anchor='HTTP'>
