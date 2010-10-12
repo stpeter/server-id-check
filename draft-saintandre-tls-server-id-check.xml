@@ -92,7 +92,7 @@
 
       <section title="Applicability and Audience" anchor="applicability">
         <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>, which governs any certificate-related topic on which this document is silent (e.g., certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths).  Specifically, in order to ensure proper authentication, application clients need to verify the entire certification path, because this document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificates used to validate the server certificate.</t>
-        <t>This document also does not supersede the rules for verifying service identity provided in specifications for existing application protocols, such as those mentioned under <xref target='prior'/>.  However, it is the intent of the authors that the best current practices described here can be referenced by future specifications, including updates to specifications for the aforementioned existing application protocols as collected under <xref target='prior'/>, if the relevant technology communities agree to do so.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
+        <t>This document also does not supersede the rules for verifying service identity provided in specifications for existing application protocols, such as those mentioned under <xref target='prior'/>.  However, it is the intent of the authors that the best current practices described here can be referenced by future specifications, including updates to specifications for existing application protocols if the relevant technology communities agree to do so.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
         <t>The primary audience for this document consists of application protocol designers, who might reference this document instead of defining their own rules for the representation and verification of application service identity.  Secondarily, the audience consists of certification authorities, client developers, service providers, and other members of technology communities that might re-use or "profile" the recommendations in this document when defining certificate issuance policies, writing software algorithms for identity matching, generating certificate signing requests, etc.</t>
       </section>
 
@@ -214,11 +214,6 @@
         <t>The editors and contributors wish to thank the following individuals for their feedback and suggestions: Nelson Bolyard, Kaspar Brand, Ben Campbell, Scott Cantor, Wan-Teh Chang, Dave Crocker, Cyrus Daboo, Charles Gardiner, Philip Guenther, Bruno Harbulot, Wes Hardaker, David Harrington, Paul Hoffman, Love Hornquist Astrand, Henry Hotz, Geoff Keating, John Klensin, Scott Lawrence, Matt McCutchen, Alexey Melnikov, Eddy Nigg, Ludwig Nussel, Joe Orton, Tom Petch, Yngve Pettersen, Tim Polk, Robert Relyea, Eric Rescorla, Pete Resnick, Martin Rex, Joe Salowey, Stefan Santesson, Jim Schaad, Rob Stradling, Peter Sylvester, Paul Tiemann, Dan Wing, and Dan Winship.</t>
       </section>
 
-      <section title="Discussion Venue" anchor="discuss">
-        <t>[[ RFC Editor: please remove this section. ]]</t>
-        <t>The editors are actively seeking input from certification authorities, application developers, and protocol designers regarding the recommendations in this document.  Please send feedback to the editors directly or post to the &lt;certid@ietf.org&gt; mailing list, for which archives and subscription information are available at <eref target='https://www.ietf.org/mailman/listinfo/certid'/>.</t>
-      </section>
-
     </section>
 
     <section title="Names" anchor="names">
@@ -252,10 +247,10 @@
 +-----------+-----------+---------------+
           ]]></artwork>
         </figure>
-        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Ideally, protocol specifications that reference this document will specify which identifiers are mandatory-to-implement by servers and clients, which identifiers are to be preferred by application service providers, and which identifiers ought to be supported by certificate issuers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
+        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Ideally, protocol specifications that reference this document will specify which identifiers are mandatory-to-implement by servers and clients, which identifiers ought to be supported by certificate issuers, and which identifiers ought to be requested by application service providers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
       </section>
       <section title="DNS Domain Names" anchor="names-dns">
-        <t>For the purposes of this specification, the name of an application service MUST be a DNS domain name that conforms to one of the following forms:</t>
+        <t>For the purposes of this specification, the name of an application service is a DNS domain name that conforms to one of the following forms:</t>
         <t>
           <list style='numbers'>
             <t>A "traditional domain name", i.e., a fully-qualified domain name or "FQDN" (see <xref target='DNS-CONCEPTS'/>) all of whose labels are "LDH labels" as defined in <xref target='IDNA-DEFS'/>.  Informally, such labels are constrained to <xref target='US-ASCII'/> letters, digits, and the hyphen, with the hyphen prohibited in the first character position.  Additional qualifications apply (please refer to the above-referenced specifications for details) but they are not germane to this specification.<vspace blankLines='1'/></t>
@@ -304,7 +299,7 @@ cn=www.example.com,c=GB,ou=Web Services
       <section title="Examples" anchor="representation-examples">
         <t>A certificate for the website at "www.example.com" might include only a DNS-ID of "www.example.com" (and, strictly as a fallback for existing client software, a CN-ID of "www.example.com").</t>
         <t>A certificate for the IMAP-accessible email server at "mail.example.com" might include an SRV-ID of "_imaps.mail.example.com" (see <xref target='EMAIL-SRV'/>) and a DNS-ID of "mail.example.com".</t>
-        <t>A certificate for the XMPP-compatible instant messaging server at "im.example.com" might include an SRV-ID of "_xmpp.im.example.com", a DNS-ID of "im.example.com", and an XMPP-specific "XmppAddr" of "im.example.com" (see <xref target='XMPP'/>).</t>
+        <t>A certificate for the XMPP-compatible instant messaging server at "im.example.com" might include an SRV-ID of "_xmpp-server.im.example.com", a DNS-ID of "im.example.com", and an XMPP-specific "XmppAddr" of "im.example.com" (see <xref target='XMPP'/>).</t>
       </section>
     </section>
 
@@ -1663,12 +1658,12 @@ specifications of each URI scheme.
 <author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
     <organization />
 </author>
-<date month='September' day='24' year='2010' />
+<date month='October' day='6' year='2010' />
 <abstract><t>This document defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a technology for streaming Extensible Markup Language (XML) elements for the purpose of exchanging structured information in close to real time between any two or more network-aware entities.  XMPP provides a generalized, extensible framework for incrementally exchanging XML data, upon which a variety of applications can be built.  The framework includes methods for stream setup and teardown, channel encryption, authentication of a client to a server and of one server to another server, and primitives for push-style messages, publication of network availability information ("presence"), and request-response interactions.  This document also specifies the format for XMPP addresses, which are fully internationalizable.  This document obsoletes RFC 3920.</t></abstract>
 </front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-16' />
+<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-17' />
 <format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-16.txt' />
+        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-17.txt' />
 </reference>
 
 <reference anchor='XMPP-OLD'>
