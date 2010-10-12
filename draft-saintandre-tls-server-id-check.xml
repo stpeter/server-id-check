@@ -11,7 +11,7 @@
 <rfc category="bcp" docName="draft-saintandre-tls-server-id-check-10" ipr="trust200902">
 
   <front>
-    <title abbrev="Server Identity">Representation and Verification of Domain-Based Application Service Identity in Certificates Used with Transport Layer Security (TLS)</title>
+    <title abbrev="Service Identity">Application Service Identity</title>
 
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
       <organization>Cisco</organization>
@@ -48,7 +48,7 @@
     <keyword>Internet-Draft</keyword>
 
     <abstract>
-      <t>Many application technologies enable a secure connection between two entities using certificates in the context of Transport Layer Security (TLS).  This document specifies best current practices for representing and verifying the identity of application services in such interactions.</t>
+      <t>Many application technologies enable a secure connection between two entities by means of Internet Public Key Infrastructure Using X.509 (PKIX) certificates in the context of Transport Layer Security (TLS).  This document specifies best current practices for representing and verifying the identity of application services in such interactions.</t>
     </abstract>
   </front>
 
@@ -56,15 +56,15 @@
 
     <section title="Introduction" anchor="intro">
       <section title="Motivation" anchor="motivation">
-        <t>The visible face of the Internet consists of services that employ a client-server architecture in which an interactive or automated client connects to an application service in order to retrieve or upload information, communicate with other entities, or access a broader network of services.  When a client connects to an application service using Transport Layer Security <xref target='TLS'/> or Datagram Transport Layer Security <xref target='DTLS'/>, it references some conception of the server's identity while attempting to establish a secure connection (e.g., "the web site at example.com").  Likewise, during TLS negotiation the server presents its conception of the server's identity in the form of a public-key certificate that was issued by a certification authority (CA) in the context of the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/>.  Informally, we can think of these identities as the client's "reference identity" and the server's "presented identity" (these rough ideas are defined more precisely later in this document through the concept of particular identifiers).  In general, a client needs to verify that the server's presented identity matches its reference identity so that it can be sure that the certificate can legitimately be used to authenticate the connection.</t> 
-        <t>Many application technologies adhere to the pattern outlined here, including but not limited to the following:</t>
+        <t>The visible face of the Internet consists of services that employ a client-server architecture in which an interactive or automated client connects to an application service in order to retrieve or upload information, communicate with other entities, or access a broader network of services.  When a client connects to an application service using Transport Layer Security <xref target='TLS'/> or Datagram Transport Layer Security <xref target='DTLS'/>, it references some conception of the server's identity while attempting to establish a secure connection (e.g., "the website at example.com").  Likewise, during TLS negotiation the server presents its conception of the service's identity in the form of a public-key certificate that was issued by a certification authority (CA) in the context of the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/>.  Informally, we can think of these identities as the client's "reference identity" and the server's "presented identity" (these rough ideas are defined more precisely later in this document through the concept of particular identifiers).  In general, a client needs to verify that the server's presented identity matches its reference identity so it can be sure that the certificate can legitimately be used to authenticate the connection.</t> 
+        <t>Many application technologies adhere to the pattern just outlined, including but not limited to the following:</t>
         <t>
           <list style="symbols">
             <t>The Internet Message Access Protocol <xref target="IMAP"/> and the Post Office Protocol <xref target="POP3"/>, for which see also <xref target="USINGTLS"/><vspace blankLines='1'/></t>
             <t>The Hypertext Transfer Protocol <xref target="HTTP"/>, for which see also <xref target="HTTP-TLS"/><vspace blankLines='1'/></t>
             <t>The Lightweight Directory Access Protocol <xref target="LDAP"/>, for which see also <xref target="LDAP-AUTH"/> and its predecessor <xref target="LDAP-TLS"/><vspace blankLines='1'/></t>
             <t>The Simple Mail Transfer Protocol <xref target="SMTP"/>, for which see also <xref target="SMTP-AUTH"/> and <xref target="SMTP-TLS"/><vspace blankLines='1'/></t>
-            <t>The Extensible Messaging and Presence Protocol <xref target="XMPP"/>, for which see also <xref target="XMPPBIS"/><vspace blankLines='1'/></t>
+            <t>The Extensible Messaging and Presence Protocol <xref target="XMPP"/>, for which see also <xref target="XMPP-OLD"/><vspace blankLines='1'/></t>
             <t>The Network News Transfer Protocol <xref target="NNTP"/>, for which see also <xref target="NNTP-TLS"/><vspace blankLines='1'/></t>
             <t>The NETCONF Configuration Protocol <xref target="NETCONF"/>, for which see also <xref target="NETCONF-SSH"/> and <xref target="NETCONF-TLS"/><vspace blankLines='1'/></t>
             <t>The Syslog Protocol <xref target="SYSLOG"/>, for which see also <xref target="SYSLOG-TLS"/><vspace blankLines='1'/></t>
@@ -73,8 +73,8 @@
             <t>The General Internet Signalling Transport <xref target="GIST"/></t>
           </list>
         </t>
-        <t>Application protocols have traditionally specified their own rules for representing and verifying server identities.  Unfortunately, this divergence of approaches has caused some confusion among certification authorities, application developers, and protocol designers.</t>
-        <t>Therefore, to codify best current practices regarding the implementation and deployment of secure PKIX-based authentication, this document specifies recommended procedures for representing and verifying server identities in certificates intended for use in applications employing TLS.</t>
+        <t>Application protocols have traditionally specified their own rules for representing and verifying application service identity.  Unfortunately, this divergence of approaches has caused some confusion among certification authorities, application developers, and protocol designers.</t>
+        <t>Therefore, to codify best current practices regarding the implementation and deployment of secure PKIX-based authentication, this document specifies recommended procedures for representing and verifying application service identity in certificates intended for use in applications employing TLS.</t>
       </section>
 
       <section title="Overview of Recommendations" anchor="overview">
@@ -83,22 +83,22 @@
         <t>
           <list style='symbols'>
             <t>Move away from including and checking strings that look like domain names in the subject's Common Name.<vspace blankLines='1'/></t>
-            <t>Move toward including and checking DNS domain names via the subjectAlternativeName extension that is designed for that purpose: dNSName.<vspace blankLines='1'/></t>
+            <t>Move toward including and checking DNS domain names via the subjectAlternativeName extension designed for that purpose: dNSName.<vspace blankLines='1'/></t>
             <t>Move toward including and checking even more specific subjectAlternativeName extensions where appropriate for the using protocol (e.g., uniformResourceIdentifier and the otherName form SRVName).</t> 
           </list>
         </t>
-        <t>The authors recognize that these suggestions are not entirely consistent with all current practices, but argue that they are consistent with best current practices and have provided these suggestions in the expectation that they will become more widely adopted in the coming years.</t>
+        <t>The authors recognize that these suggestions are not entirely consistent with all current practices, but argue that they are consistent with best current practices.  Furthermore, we have provided these suggestions in the expectation that they will become more widely adopted in the coming years.</t>
       </section>
 
       <section title="Applicability and Audience" anchor="applicability">
-        <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>, which governs any certificate-related topic on which this document is silent (e.g., certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths).  Specifically, in order to ensure proper authentication, application clients need to verify the entire certification path, because this document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificate used to validate the server certificate.</t>
-        <t>This document also does not supersede the rules for verifying server identity provided in specifications for existing application protocols, such as those mentioned under <xref target='prior'/>.  However, it is the intent of the authors that the best current practices described here can be referenced by future specifications, including updates to specifications for the aforementioned existing application protocols as collected under <xref target='prior'/> if the relevant technology communities agree to do so.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
+        <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>, which governs any certificate-related topic on which this document is silent (e.g., certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths).  Specifically, in order to ensure proper authentication, application clients need to verify the entire certification path, because this document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificates used to validate the server certificate.</t>
+        <t>This document also does not supersede the rules for verifying service identity provided in specifications for existing application protocols, such as those mentioned under <xref target='prior'/>.  However, it is the intent of the authors that the best current practices described here can be referenced by future specifications, including updates to specifications for the aforementioned existing application protocols as collected under <xref target='prior'/>, if the relevant technology communities agree to do so.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
         <t>The primary audience for this document consists of application protocol designers, who might reference this document instead of defining their own rules for the representation and verification of application service identity.  Secondarily, the audience consists of certification authorities, client developers, service providers, and other members of technology communities that might re-use or "profile" the recommendations in this document when defining certificate issuance policies, writing software algorithms for identity matching, generating certificate signing requests, etc.</t>
       </section>
 
       <section title="Scope" anchor="scope">
         <section anchor="in-scope" title="In Scope">
-          <t>This document applies only to server identities associated with fully-qualified DNS domain names, only to TLS or DTLS (or the older Secure Sockets Layer (SSL) technology), and only to PKIX-based systems.  As a result, the scenarios described in the following section are out of scope for this specification (although they might be addressed by future specifications).</t>
+          <t>This document applies only to service identities associated with fully-qualified DNS domain names, only to TLS or DTLS (or the older Secure Sockets Layer (SSL) technology), and only to PKIX-based systems.  As a result, the scenarios described in the following section are out of scope for this specification (although they might be addressed by future specifications).</t>
         </section>
         <section anchor="out-of-scope" title="Out of Scope">
           <t>The following topics are out of scope for this specification:</t>
@@ -118,11 +118,11 @@
 
                 <vspace blankLines="1"/> 
 
-                Some certification authorities issue server certificates based on IP addresses, but preliminary evidence indicates that such certificates are a very small percentage of issued certificates (e.g., less than 1%).  Furthermore, IP addresses are not necessarily reliable identifiers for application services because of the existence of private internets <xref target='PRIVATE'/>, host mobility, multiple interfaces on a given host, Network Address Translators (NATs) resulting in different addresses for a host from different locations on the network, the practice of grouping many hosts together behind a single IP address, etc.  Most fundamentally, most users find DNS domain names much easier to work with than IP addresses, which is why the domain name system was designed in the first place.  We prefer to define best practices for the much more common use case and not to complicate the rules in this specification.
+                Some certification authorities issue server certificates based on IP addresses, but preliminary evidence indicates that such certificates are a very small percentage (less than 1%) of issued certificates.  Furthermore, IP addresses are not necessarily reliable identifiers for application services because of the existence of private internets <xref target='PRIVATE'/>, host mobility, multiple interfaces on a given host, Network Address Translators (NATs) resulting in different addresses for a host from different locations on the network, the practice of grouping many hosts together behind a single IP address, etc.  Most fundamentally, most users find DNS domain names much easier to work with than IP addresses, which is why the domain name system was designed in the first place.  We prefer to define best practices for the much more common use case and not to complicate the rules in this specification.
 
                 <vspace blankLines="1"/> 
 
-                Furthermore, we focus here on the verification of application service identities, not specific resources located at such services, e.g., a specific web page that can be accessed at a particular Uniform Resource Identifier <xref target='URI'/> whose authority component is the DNS domain name of the application service.  We also do not address identifiers derived from Naming Authority Pointer (NAPTR) DNS resource records <xref target='NAPTR'/> and related technologies such as <xref target='S-NAPTR'/>, since such identifiers cannot be validated in a trusted manner in the absence of <xref target='DNSSEC'/>.
+                Furthermore, we focus here on application service identities, not specific resources located at such services, e.g., a specific web page that can be accessed at a particular Uniform Resource Identifier <xref target='URI'/> whose authority component is the DNS domain name of the application service.  We also do not address identifiers derived from Naming Authority Pointer (NAPTR) DNS resource records <xref target='NAPTR'/> and related technologies such as <xref target='S-NAPTR'/>, since such identifiers cannot be validated in a trusted manner in the absence of <xref target='DNSSEC'/>.
 
                 <vspace blankLines="1"/> 
 
@@ -135,7 +135,7 @@
 
                 <vspace blankLines="1"/> 
 
-                Although other secure, lower-layer protocols exist and even employ PKIX certificates at times, e.g. IPsec <xref target='IPSEC'/>, their use cases can differ from those of TLS-based or DTLS-based application technologies.  Furthermore, application technologies have less experience with IPsec than with TLS, thus making it more difficult to gather feedback on proposed best practices.
+                Although other secure, lower-layer protocols exist and even employ PKIX certificates at times (e.g., IPsec <xref target='IPSEC'/>), their use cases can differ from those of TLS-based or DTLS-based application technologies.  Furthermore, application technologies have less experience with IPsec than with TLS, thus making it more difficult to gather feedback on proposed best practices.
 
                 <vspace blankLines="1"/> 
               </t>
@@ -144,16 +144,15 @@
 
                 <vspace blankLines="1"/> 
                 
-                Some deployed application technologies use a web of trust model based on or similar to OpenPGP <xref target='OPENPGP'/>, or use self-signed certificates, or are deployed on networks are not directly connected to the public Internet and therefore cannot depend on Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol <xref target='OCSP'/> to check CA-issued certificates.  However, the syntax of OpenPGP differs essentially from that of X.509, the data in self-signed certificates has not been certified by a third party in any way, and checking of CA-issued certificates via CRLs or OSCP is critically important to maintaining the security of PKIX-based systems.  Attempting to define best practices for such technologies would unduly complicate the rules defined in this specification.
+                Some deployed application technologies use a web of trust model based on or similar to OpenPGP <xref target='OPENPGP'/>, or use self-signed certificates, or are deployed on networks that are not directly connected to the public Internet and therefore cannot depend on Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol <xref target='OCSP'/> to check CA-issued certificates.  However, the syntax of OpenPGP differs essentially from that of X.509, the data in self-signed certificates has not been certified by a third party in any way, and checking of CA-issued certificates via CRLs or OSCP is critically important to maintaining the security of PKIX-based systems.  Attempting to define best practices for such technologies would unduly complicate the rules defined in this specification.
 
-                <vspace blankLines="1"/>  
               </t>
             </list>
           </t>
           <t>Furthermore, this document also does not address various certification authority policies, such as:</t>
           <t>
             <list style='symbols'>
-              <t>What classes and types of certificates to issue and whether to apply different policies for them (e.g., allow the wildcard character in Class 2 certificates but not in Class 1 or Extended Validation certificates).<vspace blankLines="1"/></t>
+              <t>What classes and types of certificates to issue and whether to apply different policies for them (e.g., allow the wildcard character in Class 2 certificates but not in Extended Validation certificates <xref target='EV-CERTS'/> or in Class 1 certificates).<vspace blankLines="1"/></t>
               <t>Whether to issue certificates based on IP addresses (or some other form, such as relative domain names) in addition to fully-qualified DNS domain names.<vspace blankLines="1"/></t>
               <t>Which identifiers to include (e.g., whether to include SRV-IDs or URI-IDs as defined in the body of this specification).<vspace blankLines="1"/></t>
               <t>How to certify or validate fully-qualified domain names and application service types.<vspace blankLines="1"/></t>
@@ -175,7 +174,7 @@
             <t hangText="derived domain:">A domain name or host name that a client has derived from the source domain in an automated fashion (e.g., by means of a <xref target='DNS-SRV'/> lookup) or that a human user directly controlling an interactive client has explicitly configured for connecting to the source domain.<vspace blankLines='1'/></t>
             <t hangText="direct name:">A name for an application service that is provided directly to a client by a user, resulting in a source domain and (optionally) a service type.<vspace blankLines='1'/></t>
             <t hangText="identifier:">A particular instance of an identifier type that is either presented by a server in a certificate or referenced by a client for matching purposes.<vspace blankLines='1'/></t>
-            <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore also used for matching purposes; the types covered in this specification are:
+            <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore that can also be used for matching purposes; the types covered in this specification are:
               <vspace blankLines='1'/><list style='symbols'>
                 <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject that contains one and only one attribute-type-and-value pair of type Common Name (CN); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
                 <t>DNS-ID = a subjectAltName entry of type dNSName; see <xref target='PKIX'/><vspace blankLines='1'/></t>
@@ -184,18 +183,19 @@
               </list>
             <vspace blankLines='1'/></t>
             <t hangText="indirect name:">A name for an application service that is resolved by a client (or redirected by a server) based on a direct name provided by a user, resulting in a derived domain and (optionally) a service type.<vspace blankLines='1'/></t>
-            <t hangText="interactive client:">A software agent or device that is directly controlled by a human user.  (Other specifications related to security and application protocols, such as <xref target='WSC-UI'/>, often refer to this entity as a "user agent", however that term is neither entirely accurate nor consistent with the terminology of common application protocols such as <xref target='HTTP'/>.)<vspace blankLines='1'/></t>
-            <t hangText="pinning:">The act of establishing a cached name association between the application service's certificate and one of the client's reference identifiers, despite the fact that none of the presented identifiers matches the given reference identifier.  The cached name association needs to take account of both the certificate presented and the context in which it was accepted or configured (where the context includes the chain of certificates from the presented certificate to the trust anchor, the source domain, the application type, the service's derived domain and port number, and other relevant information such as the subject field's Common Name, Organization, and Country).  Pinning can be the result of (a) positive acceptance by a human user during a previous interaction with the application service or (b) configuration settings such as account setup or a user-configured or admin-configured host-to-address/address-to-host lookup table.  Once a cached name association is established, the certificate is said to be pinned to the reference identifer.  (A similar definition of "pinning" is provided in <xref target='WSC-UI'/>.)<vspace blankLines='1'/></t>
-            <t hangText="PKIX:">PKIX is a short name for RFC 5280 [PKIX], which comprises a profile of the X.509v3 certificate specifications and X.509v2 certificate revocation list (CRL) specifications for use in the Internet.<vspace blankLines='1'/></t>
+            <t hangText="interactive client:">A software agent or device that is directly controlled by a human user.  (Other specifications related to security and application protocols, such as <xref target='WSC-UI'/>, often refer to this entity as a "user agent"; however that term is neither entirely accurate nor consistent with the terminology of common application protocols such as <xref target='HTTP'/>.)<vspace blankLines='1'/></t>
+            <t hangText="pinning:">The act of establishing a cached name association between the application service's certificate and one of the client's reference identifiers, despite the fact that none of the presented identifiers matches the given reference identifier.  Pinning can be the result of (a) positive acceptance by a human user during a previous interaction with the application service or (b) configuration settings such as account setup or a user-configured or admin-configured host-to-address/address-to-host lookup table.  Once a cached name association is established, the certificate is said to be pinned to the reference identifer.  (A similar definition of "pinning" is provided in <xref target='WSC-UI'/>.)<vspace blankLines='1'/></t>
+            <t hangText="PKIX:">PKIX is a short name for the Internet Public Key Infrastructure using X.509 defined in RFC 5280 [PKIX], which comprises a profile of the X.509v3 certificate specifications and X.509v2 certificate revocation list (CRL) specifications for use in the Internet.<vspace blankLines='1'/></t>
             <t hangText="PKIX-based system:">A software implementation or deployed service that makes use of X.509v3 certificates and X.509v2 certificate revocation lists (CRLs).<vspace blankLines='1'/></t>
-            <t hangText="PKIX certificate:">An X.509v3 certificate generated and employed in the context of the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/>.<vspace blankLines='1'/></t>
+            <t hangText="PKIX certificate:">An X.509v3 certificate generated and employed in the context of PKIX.<vspace blankLines='1'/></t>
             <t hangText="presented identifier:">An identifier that is presented by a server to a client within the server's PKIX certificate when the client attempts to establish a secure connection with the server; the certificate can include one or more presented identifiers of different types.<vspace blankLines='1'/></t>
             <t hangText="reference identifier:">An identifier that is used by the client for matching purposes when checking the presented identifiers; the client can attempt to match multiple reference identifiers of different types.<vspace blankLines='1'/></t>
             <t hangText="restricted name:">A name that can be used only for one type of service at an application service provider.<vspace blankLines='1'/></t>
             <t hangText="service type:">A formal identifier for the application protocol used to provide a particular kind of service at a domain; the service type typically takes the form of a Uniform Resource Identifier scheme <xref target='URI'/> or a DNS SRV Service <xref target='DNS-SRV'/>.<vspace blankLines='1'/></t>
             <t hangText="source domain:">The fully-qualified DNS domain name that a client expects an application service to present in the certificate.<vspace blankLines='1'/></t>
             <t hangText="subjectAltName entry:">A specific identifier placed in a subjectAltName extension.<vspace blankLines='1'/></t>
-            <t hangText="subjectAltName extension:">A standard PKIX certificate extension as described in <xref target='PKIX'/>.  The subject alternative name extension allows various identifiers of various types to be bound to the certificate subject, in addition or in place of the subject name.<vspace blankLines='1'/></t>
+            <t hangText="subjectAltName extension:">A standard PKIX certificate extension as described in <xref target='PKIX'/>.  The subject alternative name extension allows various identifiers of various types to be bound to the certificate subject, in addition or in place of the subject field.<vspace blankLines='1'/></t>
+            <t hangText="subject field:">The subject field of a PKIX certificate identifies the entity associated with the public key stored in the subject public key field (see Section 4.1.2.6 of <xref target='PKIX'/>).<vspace blankLines='1'/></t>
             <t hangText="subject name:">The name of a PKIX certificate's subject, encoded as the X.501 type Name, and conveyed in a certificate's subject field (see Section 4.1.2.6 of <xref target='PKIX'/>).  Note that a subject's name(s) can be represented in the subject field, the subjectAltName extension, or both (see <xref target='PKIX'/> for details).<vspace blankLines='1'/></t>
             <t hangText="TLS client:">An entity that assumes the role of a client in a Transport Layer Security <xref target='TLS'/> negotiation; in this specfication we generally assume that the TLS client is an (interactive or automated) application client, however in application protocols that enable server-to-server communication the TLS client could be a peer application service.<vspace blankLines='1'/></t>
             <t hangText="TLS server:">An entity that assumes the role of a server in a Transport Layer Security <xref target='TLS'/> negotiation; in this specfication we assume that the TLS server is an application service.<vspace blankLines='1'/></t>
@@ -203,7 +203,7 @@
           </list>
         </t>
         <t>Most security-related terms in this document are to be understood in the sense defined in <xref target="SECTERMS"/>; such terms include, but are not limited to, "attack", "authentication", "authorization", "certification authority", "certification path", "certificate", "credential", "identity", "self-signed certificate", "trust", "trust anchor", "trust chain", "validate", and "verify".</t>
-        <t>The following capitalized keywords are to be interpreted as described in <xref target="KEYWORDS"/>: "MUST", "SHALL", "REQUIRED"; "MUST NOT", "SHALL NOT"; "SHOULD", "RECOMMENDED"; "SHOULD NOT", "NOT RECOMMENDED"; "MAY", "OPTIONAL".</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='KEYWORDS'/>.</t>
       </section>
 
       <section title="Contributors" anchor="contributors">
@@ -225,14 +225,14 @@
       <t>This section discusses naming of application services on the Internet, followed by a brief tutorial about subject naming in PKIX.</t>
       <section title="Naming Application Services" anchor="names-apps">
         <t>This specification assumes that the name of an application service is based on a DNS domain name (e.g., "example.com") -- supplemented in some circumstances by a service type (e.g., "the IMAP server at example.com").</t>
-        <t>From the perspective of the application client or user, some names are direct because they are provided directly by the user (e.g., via runtime input or prior configuration) whereas other names are indirect because they are resolved by the client based on input provided directly by the user (e.g., a target name resolved from a source name using DNS SRV records). This dimension matters for certificate verification.</t>
-        <t>From the perspective of the application service, some names are unrestricted because they can be used in any type of service (e.g., a certificate might be re-used for both the HTTP service and the IMAP service at example.com) whereas other names are restricted because they can be used in only one type of service (e.g., a special-purpose certificate that can be used only for an IMAP service).  This dimension matters for certificate issuance.</t>
+        <t>From the perspective of the application client or user, some names are direct because they are provided directly by the user (e.g., via runtime input or prior configuration) whereas other names are indirect because they are resolved by the client based on input provided directly by the user (e.g., a target name resolved from a source name using DNS SRV records). This dimension matters most for certificate verification.</t>
+        <t>From the perspective of the application service, some names are unrestricted because they can be used in any type of service (e.g., a certificate might be re-used for both the HTTP service and the IMAP service at example.com) whereas other names are restricted because they can be used in only one type of service (e.g., a special-purpose certificate that can be used only for an IMAP service).  This dimension matters most for certificate issuance.</t>
         <t>Therefore:</t>
         <t>
           <list style='symbols'>
             <t>A CN-ID is direct (provided by a user) and unrestricted (can be used for any application).<vspace blankLines='1'/></t>
             <t>A DNS-ID is direct (provided by a user) and unrestricted (can be used for any application).<vspace blankLines='1'/></t>
-            <t>An SRV-ID can be either direct (provided by a user) or more typically indirect (resolved by a client) and is restricted (can be used for only a single application).<vspace blankLines='1'/></t>
+            <t>An SRV-ID can be either direct (provided by a user) or more typically indirect (resolved by a client), and is restricted (can be used for only a single application).<vspace blankLines='1'/></t>
             <t>A URI-ID is direct (provided by a user) and restricted (can be used for only a single application).</t>
           </list>
         </t>
@@ -252,7 +252,7 @@
 +-----------+-----------+---------------+
           ]]></artwork>
         </figure>
-        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Protocol specifications that reference this document MUST specify which identifiers are mandatory-to-implement by servers and clients, which identifiers are to be preferred by application service providers, and which identifiers ought to be supported by certificate issuers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
+        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Ideally, protocol specifications that reference this document will specify which identifiers are mandatory-to-implement by servers and clients, which identifiers are to be preferred by application service providers, and which identifiers ought to be supported by certificate issuers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
       </section>
       <section title="DNS Domain Names" anchor="names-dns">
         <t>For the purposes of this specification, the name of an application service MUST be a DNS domain name that conforms to one of the following forms:</t>
@@ -266,12 +266,12 @@
       <section title="Subject Naming in PKIX Certificates" anchor="names-pkix">
         <t>In theory, the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/> employs the global directory service model defined in <xref target='X.500'/> and <xref target='X.501'/>.  In that model, information is held in a directory information base (DIB) and entries in the DIB are organized in a hierarchy called the directory information tree (DIT).  An object or alias entry in that hierarchy consists of a set of attributes (each of which has a defined type and one or more values) and is uniquely identified by a Distinguished Name (DN).  The DN of an entry is constructed by combining the Distinguished Name of its superior entries in the tree (all the way down to the root of the DIT) with one or more specially-nominated attributes of the entry itself (which together comprise the Relative Distinguished Name (RDN) of the entry, so-called because it is relative to the Distinguished Names of the superior entries in the tree).  The entry closest to the root is sometimes referred to as the "most significant" entry and the entry farthest from the root is sometimes referred to as the "least significant" entry.  An RDN is a set (i.e., an unordered group) of attribute-type-and-value pairs (see also <xref target='LDAP-DN'/>), each of which asserts some attribute about the entry.</t>
         <t>In practice, the certificates used in <xref target='X.509'/> and <xref target='PKIX'/> borrow key concepts of X.500 and X.501 (e.g., DNs and RDNs) to identify entities, but such certificates are not necessarily part of a global directory information base.  Specifically, the subject field of a PKIX certificate is an X.501 type Name that "identifies the entity associated with the public key stored in the subject public key field" (see Section 4.1.2.6 of <xref target='PKIX'/>).  However, it is perfectly acceptable for the subject field to be empty, as long as the certificate contains a subjectAltName extension that includes at least one subjectAltName entry, because the subject alternative name ("subjectAltName") extension allows various identities to be bound to the subject (see Section 4.2.1.6 of <xref target='PKIX'/>).  The subjectAltName extension itself is a sequence of typed entries, where each type is a distinct kind of identifier.</t>
-        <t>For our purposes, an application service is identified by a name or names carried in the subject field and/or in one of the following subjectAltName entry types:</t>
+        <t>For our purposes, an application service is identified by a name or names carried in the subject field and/or in one of the following identifier types:</t>
         <t>
           <list style='symbols'>
-            <t>dNSName -- a (fully-qualified) DNS domain name <xref target='PKIX'/><vspace blankLines='1'/></t>
-            <t>SRVName -- a DNS SRV service name <xref target='DNS-SRV'/> <xref target='SRVNAME'/><vspace blankLines='1'/></t>
-            <t>uniformResourceIdentifier -- a Uniform Resource Identifier <xref target='URI'/> <xref target='PKIX'/></t>
+            <t>DNS-ID</t>
+            <t>SRV-ID</t>
+            <t>URI-ID</t>
           </list>
         </t>
         <t>We recognize that existing certificates often use a CN-ID in the subject field to represent a fully-qualified DNS domain name; for example, consider the following subject name, where the attribute of type Common Name contains a string whose form matches that of a fully-qualified DNS domain name of "www.example.com":</t>
@@ -281,7 +281,7 @@ cn=www.example.com,c=GB,ou=Web Services
           ]]></artwork>
         </figure>
         <t>However, in general, this specification recommends and prefers use of subjectAltName entries over use of the subject field where possible, as more completely described in the following sections.</t>
-        <t><list style='empty'><t>Implementation Note: Confusion sometimes arises from different renderings or encodings of the hierarchical information contained in a certificate.  Certificates are binary objects and are encoded using the Distinguished Encoding Rules (DER) specified in <xref target='X.690'/>.  However, some implementations generate displayable (a.k.a. printable) renderings of certificate issuer, subject, and subject alternative names, and these renderings convert the DER-encoded sequences into a "string representation" before being displayed.  Because a Distinguished Name (DN) is an ordered sequence, order is preserved in the string representation of a DN.  However, because a Relative Distinguished Name (RDN) is an unordered group of attribute-type-and-value pairs, the string representation of an RDN can differ from the canonical DER encoding (and the order of attribute-type-and-value pairs can differ in the string representations or display orders provided by various implementations).  Furthermore, various specifications refer to the order of RDNs using terminology that is not directly related to the information hierarchy, such as "most specific" vs. "least specific", "left-most" vs. "right-most", "first" vs. "last", or "most significant" vs. "least significant" (see for example <xref target='LDAP-DN'/>).  To reduce confusion, in this specification we avoid such terms and instead use the terms provided under <xref target='terminology'/>; in particular, we do not use the term "(most specific) Common Name field in the Subject field" from <xref target='HTTP-TLS'/> and instead state that a CN-ID is a Relative Distinguished Name (RDN) in the certificate subject that contains one and only one attribute-type-and-value pair of type Common Name (thus removing the possibility that an RDN might contain multiple AVAs of type CN, one of which would be considered "most specific").</t></list></t>
+        <t><list style='empty'><t>Implementation Note: Confusion sometimes arises from different renderings or encodings of the hierarchical information contained in a certificate.  Certificates are binary objects and are encoded using the Distinguished Encoding Rules (DER) specified in <xref target='X.690'/>.  However, some implementations generate displayable (a.k.a. printable) renderings of the certificate issuer, subject field, and subjectAltName extension, and these renderings convert the DER-encoded sequences into a "string representation" before being displayed.  Because a Distinguished Name (DN) is an ordered sequence, order is preserved in the string representation of a DN.  However, because a Relative Distinguished Name (RDN) is an unordered group of attribute-type-and-value pairs, the string representation of an RDN can differ from the canonical DER encoding (and the order of attribute-type-and-value pairs can differ in the string representations or display orders provided by various implementations).  Furthermore, various specifications refer to the order of RDNs using terminology that is not directly related to the information hierarchy, such as "most specific" vs. "least specific", "left-most" vs. "right-most", "first" vs. "last", or "most significant" vs. "least significant" (see for example <xref target='LDAP-DN'/>).  To reduce confusion, in this specification we avoid such terms and instead use the terms provided under <xref target='terminology'/>; in particular, we do not use the term "(most specific) Common Name field in the Subject field" from <xref target='HTTP-TLS'/> and instead state that a CN-ID is a Relative Distinguished Name (RDN) in the certificate subject that contains one and only one attribute-type-and-value pair of type Common Name (thus removing the possibility that an RDN might contain multiple AVAs of type CN, one of which would be considered "most specific").</t></list></t>
       </section>
     </section>
 
@@ -293,11 +293,11 @@ cn=www.example.com,c=GB,ou=Web Services
             <t>The certificate SHOULD include a "DNS-ID" (i.e., a subjectAltName entry of type dNSName) if possible as a baseline for interoperability.<vspace blankLines='1'/></t>
             <t>If the service using the certificate deploys a technology in which a server is discovered by means of DNS SRV records <xref target='DNS-SRV'/> (e.g., this is true of <xref target='XMPP'/>), then the certificate SHOULD include an "SRV-ID" (i.e., a subjectAltName entry of type otherName whose name form is SRVName as specified in <xref target='SRVNAME'/>); furthermore, multiple instances of the "SRV-ID" identifier type are allowed.<vspace blankLines='1'/></t>
             <t>If the service using the certificate deploys a technology in which a server is typically associated with a URI (e.g., this is true of <xref target='SIP'/>), then the certificate SHOULD include a URI-ID (i.e., a subjectAltName entry of type uniformResourceIdentifier); the scheme SHALL be that of the protocol associated with the service type and the authority component SHALL be the fully-qualified DNS domain name of the service; furthermore, multiple instances of the "URI-ID" identifier type are allowed.<vspace blankLines='1'/></t>
-            <t>The certificate MAY include other application-specific identifiers for types that were defined before publication of <xref target='SRVNAME'/> (e.g., XmppAddr for <xref target='XMPP'/>) or for which service names or URI schemes do not exist; however, such application-specific identifiers are not generally applicable and therefore are out of scope for this specification.<vspace blankLines='1'/></t>
+            <t>The certificate MAY include other application-specific identifiers for types that were defined before publication of <xref target='SRVNAME'/> (e.g., XmppAddr for <xref target='XMPP'/>) or for which service names or URI schemes do not exist; however, such application-specific identifiers are not applicable to all applicaiton technologies and therefore are out of scope for this specification.<vspace blankLines='1'/></t>
             <t>Even though many deployed clients still check for the CN-ID within the certificate subject name, the certificate SHOULD NOT represent the server's fully-qualified DNS domain name in a CN-ID.<vspace blankLines='1'/></t>
             <t>The certificate MAY contain more than one DNS-ID, but SHOULD NOT contain more than one CN-ID.<vspace blankLines='1'/></t>
-            <t>The fully-qualified DNS domain name portion of a DNS-ID or CN-ID MAY contain one instance of the wildcard character '*', but only as the complete left-most label of the domain name component of the identifier (following the definition of "label" from <xref target='DNS'/>).  Note well that this rule is more restrictive than the rule from several of the specifications mentioned under <xref target='prior'/>, because allowing the wildcard character in component fragments (e.g., *oo.example.com, f*o.example.com, foo*.example.com, and perhaps even f*b*r.example.com) complicates the logic for DNS domain name matching.<vspace blankLines='1'/></t>
-            <t>Specifications that reference the rules defined in this document can specify that the wildcard character is not allowed in certificates used by the relevant application protocol or community of interest.</t>
+            <t>The fully-qualified DNS domain name portion of a DNS-ID or CN-ID MAY contain one instance of the wildcard character '*', but only as the complete left-most label of the domain name component of the identifier (following the definition of "label" from <xref target='DNS'/>).  Note well that this rule is more restrictive than the rule from several of the specifications mentioned under <xref target='prior'/>; this change was made because allowing the wildcard character in component fragments (e.g., *oo.example.com, f*o.example.com, foo*.example.com, and perhaps even f*b*r.example.com) complicates the logic for DNS domain name matching.<vspace blankLines='1'/></t>
+            <t>Specifications that reference the rules defined in this document can specify that the wildcard character is not allowed in certificates used by the relevant application protocol or community of interest (e.g., this is the case in <xref target='SIP-CERTS'/>).</t>
           </list>
         </t>
       </section>
@@ -319,12 +319,12 @@ cn=www.example.com,c=GB,ou=Web Services
             <t>When checking a reference identifier against a presented identifier, the client (a) MUST match the source domain of the identifiers and (b) MAY also match the service type of the identifiers.</t>
           </list>
         </t>
-        <t><list style='empty'><t>Security Note: In cases where a user (i) has previously proceeded with a connection attempt despite an identity mismatch between the source domain and the host name or DNS domain name to which it has connected or (ii) has explicitly configured the client to connect to a host name or DNS domain name other than the source domain, the client might check the derived domain in addition to the source domain; these scenarios are described more fully under <xref target='verify-outcome-fallback'/> and <xref target='security-delegation'/>.</t></list></t>
+        <t><list style='empty'><t>Security Note: In cases where the service's certificate has been pinned to a particular reference identifier as defined under <xref target='terminology'/>, the client might check the derived domain in addition to the source domain; these scenarios are described more fully under <xref target='verify-outcome-fallback'/> and <xref target='security-delegation'/>.</t></list></t>
         <t><list style='empty'><t>Implementation Note: Naturally, in addition to checking identifiers, a client might complete further checks to ensure that the server is authorized to provide the requested service.  However, such checking is not a matter of verifying the application service identity presented in a certificate, and therefore methods for doing so (e.g., consulting local policy information) are out of scope for this document.</t></list></t>
       </section>
       <section title="Constructing a List of Reference Identifiers" anchor="verify-reference">
         <section title="Rules" anchor="verify-reference-rules">
-          <t>Before connecting to the server, the client MUST construct a list of acceptable reference identifiers.</t>
+          <t>The client MUST construct a list of acceptable reference identifiers, and MUST do so independently of the identifiers presented by the service.</t>
           <t>The inputs here might be a URI that a user has typed into an interface (e.g., an HTTP URL for a web site), configured account information (e.g., the domain name of an IMAP or POP3 account for retrieving email), a hyperlink in a web page that triggers a browser to retrieve a media object or script, or some other combination of information that can yield a source domain and a service type.</t>
           <t>The client might need to derive the source domain and service type from the input(s) it has received.  The derived data MUST include only information that can be securely parsed out of the inputs (e.g., extracting the fully-qualified DNS domain name from the authority component of a URI or extracting the service type from the scheme of a URI) or information for which the derivation is performed in a manner that is not subject to subversion by network attackers (e.g., using <xref target='DNSSEC'/>, user-configured or admin-configured host-to-address/address-to-host lookup tables, or a third-party domain mapping service in which a human user has explicitly placed trust and with which the client communicates over a connection that provides both mutual authentication and integrity checking).</t>
           <t>In some cases the inputs might include more than one fully-qualified DNS domain name, because a user might have explicitly configured the client to associate a derived domain with the source domain.  Such delegation can occur by means of user-approved DNS SRV records (e.g., _xmpp-server._tcp.im.example.com might yield an address of hosting.example.net) or a user-configured lookup table for host-to-address or address-to-host translations (e.g., the Unix "hosts" file).  See under <xref target='security'/> for further discussion of service delegation.</t>
@@ -333,7 +333,7 @@ cn=www.example.com,c=GB,ou=Web Services
             <list style='symbols'>
               <t>The list MUST include a DNS-ID.  A reference identifier of type DNS-ID can be directly constructed from a fully-qualified DNS domain name that is (a) contained in or securely derived from the inputs (i.e., the source domain), or (b) explicitly associated with the source domain by means of user configuration (i.e., a derived domain).<vspace blankLines='1'/></t>
               <t>If a server for the service type is typically discovered by means of DNS SRV records, then the list SHOULD include an SRV-ID.<vspace blankLines='1'/></t>
-              <t>If a server for the service type is typically associated with a URI, then the list SHOULD include a URI-ID <vspace blankLines='1'/></t>
+              <t>If a server for the service type is typically associated with a URI, then the list SHOULD include a URI-ID.<vspace blankLines='1'/></t>
               <t>The list SHOULD NOT include a CN-ID; however, if a CN-ID is included despite this advice, it MUST be constructed only from the source domain and never from a derived domain.</t>
             </list>
           </t>
@@ -342,14 +342,14 @@ cn=www.example.com,c=GB,ou=Web Services
         </section>
         <section title="Examples" anchor="verify-reference-examples">
           <t>A web browser that is connecting via HTTP to the website at "www.example.com" might have two reference identifiers: a DNS-ID of "www.example.com" and, as a fallback, a CN-ID of "www.example.com".</t>
-          <t>A mail user agent that is connecting via IMAP to the email service at "mail.example.com" might have two reference identifieris: an SRV-ID of "_imaps.mail.example.com" (see <xref target='EMAIL-SRV'/>) and a DNS-ID of "mail.example.com".</t>
-          <t>An instant messaging client that is connecting via XMPP to the IM service at "im.example.com" might have three reference identifiers: an SRV-ID of "_xmpp.im.example.com", a DNS-ID of "im.example.com", and an XMPP-specific "XmppAddr" of "im.example.com" (see <xref target='XMPP'/>).</t>
+          <t>A mail user agent that is connecting via IMAP to the email service at "mail.example.com" might have two reference identifiers: an SRV-ID of "_imaps.mail.example.com" (see <xref target='EMAIL-SRV'/>) and a DNS-ID of "mail.example.com".</t>
+          <t>An instant messaging (IM) client that is connecting via XMPP to the IM service at "im.example.com" might have three reference identifiers: an SRV-ID of "_xmpp.im.example.com", a DNS-ID of "im.example.com", and an XMPP-specific "XmppAddr" of "im.example.com" (see <xref target='XMPP'/>).</t>
         </section>
       </section>
       <section title="Seeking a Match" anchor="verify-seek">
         <t>Once the client has constructed its list of reference identifiers and has received the server's presented identifiers in the form of a PKIX certificate, the client checks its reference identifiers against the presented identifiers for the purpose of finding a match.  The search fails if the client exhausts its list of reference identifiers without finding a match.  The search succeeds if any presented identifier matches one of the reference identifiers, at which point the client SHOULD stop the search.</t>
         <t><list style='empty'><t>Implementation Note: A client might be configured to perform multiple searches, i.e., to match more than one reference identifier; although such behavior is not forbidden by this document, rules for matching multiple reference identifiers are a matter for implementation or future specification.</t></list></t>
-        <t><list style='empty'><t>Security Note: A client SHALL seek a match for a reference identifier of CN-ID only if the certificate contains no other presented identifiers.</t></list></t>
+        <t><list style='empty'><t>Security Note: A client MUST NOT seek a match for a reference identifier of CN-ID if the if the presented identifiers include a DNS-ID, SRV-ID, URI-ID, or any application-specific subjectAltName entry types supported by the client.</t></list></t>
         <t>Detailed comparison rules for finding a match are provided in the following sections.</t>
       </section>
       <section title="Verifying a Domain Name" anchor="verify-domain">
@@ -372,15 +372,15 @@ cn=www.example.com,c=GB,ou=Web Services
           <t>A specification that references the rules defined in this document can strengthen the generic recommendations herein by disallowing wildcard matching altogether for the relevant application protocol or community of interest.</t>
         </section>
         <section title="Checking of Common Names" anchor="verify-domain-cn">
-          <t>As noted, a client MUST NOT seek a match for a reference identifier of CN-ID if the presented identifiers include an SRV-ID, URI-ID, DNS-ID, or any application-specific subjectAltName entry types supported by the client.</t>
-          <t>Therefore, if and only if the set of identifiers does not include a subjectAltName entry of type dNSName, SRVName, or uniformResourceIdentifier (or any application-specific subjectAltName entry types supported by the client), the client MAY as a last resort check for a string whose form matches that of a fully-qualified DNS domain name in the CN-ID.  If the client chooses to compare a reference identifier of type CN-ID against that string, it MUST follow the comparison rules for the source domain of an identifier of type DNS-ID, SRV-ID, or URI-ID, as described under <xref target='verify-domain'/>.</t>
+          <t>As noted, a client MUST NOT seek a match for a reference identifier of CN-ID if the presented identifiers include a DNS-ID, SRV-ID, URI-ID, or any application-specific subjectAltName entry types supported by the client.</t>
+          <t>Therefore, if and only if the presented identifiers do not include a DNS-ID, SRV-ID, URI-ID, or any application-specific subjectAltName entry types supported by the client, then the client MAY as a last resort check for a string whose form matches that of a fully-qualified DNS domain name in the CN-ID.  If the client chooses to compare a reference identifier of type CN-ID against that string, it MUST follow the comparison rules for the source domain of an identifier of type DNS-ID, SRV-ID, or URI-ID, as described under <xref target='verify-domain-trad'/>, <xref target='verify-domain-idn'/>, and <xref target='verify-domain-wildcards'/>.</t>
         </section>
       </section>
       <section title="Verifying an Application Type" anchor="verify-app">
         <t>When checking identifiers of type SRV-ID and URI-ID, a client SHOULD check not only the domain name but also the service type of the service to which it connects.  This is a best practice because typically a client is not designed to connect to all kinds of services using all possible application protocols, but instead is designed to connect to one kind of service, such as a web site, an email service, or an instant messaging service.</t>
         <t>The service type is verified by means of either an SRV-ID or URI-ID.</t>
         <section title="SRV-ID" anchor="verify-app-srv">
-          <t>The service name portion of an SRV-ID (e.g., "xmpp") MUST be matched in a case-insensitive manner, in accordance with <xref target='DNS-SRV'/>.  Note that the "_" character is prepended to the service identifier in DNS SRV records.</t>
+          <t>The service name portion of an SRV-ID (e.g., "xmpp") MUST be matched in a case-insensitive manner, in accordance with <xref target='DNS-SRV'/>.  Note that the "_" character is prepended to the service identifier in DNS SRV records and in SRV-IDs (per <xref target='SRVNAME'/>.</t>
         </section>
         <section title="URI-ID" anchor="verify-app-uri">
           <t>The scheme name portion of a URI-ID (e.g., "sip") MUST be matched in a case-insensitive manner, in accordance with <xref target='URI'/>.  Note that the ":" character is a separator between the scheme name and the rest of the URI, and therefore does not need to be included in any comparison.</t>
@@ -391,8 +391,8 @@ cn=www.example.com,c=GB,ou=Web Services
         <section title="Case #1: Match Found" anchor="verify-outcome-matched">
           <t>If the client has found a presented identifier that matches a reference identifier, matching has succeeded.  In this case, the client MUST use the matched reference identifier as the validated identity of the server.</t>
         </section>
-        <section title="Case #2: No Match Found, Certificate Pinned" anchor="verify-outcome-pin">
-          <t>If the client does not find a presented identifier matching any of the reference identifiers but the client has previously the application service's certificate to one of its reference identifiers (as explained under <xref target='terminology'/>), then the server identity check succeeds.</t>
+        <section title="Case #2: No Match Found, Pinned Certificate" anchor="verify-outcome-pin">
+          <t>If the client does not find a presented identifier matching any of the reference identifiers but the client has previously pinned the application service's certificate to one of its reference identifiers (as explained under <xref target='terminology'/>), then the server identity check succeeds.</t>
         </section>
         <section title="Case #3: No Match Found, No Pinned Certificate" anchor="verify-outcome-nopin">
           <t>If the client does not find a presented identifier matching any of the reference identifiers and the client has not previously pinned the certificate to one of its reference identifiers, then the client MUST proceed as described under <xref target='verify-outcome-fallback'/>.</t>
@@ -406,9 +406,12 @@ cn=www.example.com,c=GB,ou=Web Services
     </section>
 
     <section title="Security Considerations" anchor="security">
+      <section title="Pinned Certificates" anchor="security-pinning">
+        <t>When a certificate is pinned to a reference identifier as defined under <xref target='terminology'/>, the cached name association needs to take account of both the certificate presented and the context in which it was accepted or configured (where the context includes the chain of certificates from the presented certificate to the trust anchor, the source domain, the application type, the service's derived domain and port number, and other relevant information such as the subject field's Common Name, Organization, and Country).</t>
+      </section>
       <section title="Service Delegation" anchor="security-delegation">
-        <t>When the connecting application is an interactive client, construction of the reference identifier SHOULD be based on the source domain (e.g. when specifying the server portion of the user's account name on the server or when explicitly configuring the client to connect to a particular host or URI as in <xref target='SIP-LOC'/>) and SHOULD NOT be based on a derived domain (e.g., a host name or domain name discovered through DNS resolution of the source domain).  This rule is important because only a match between the user inputs and a presented identifier enables the client to be sure that the certificate can legitimately be used to secure the connection.</t>
-        <t>There is one scenario in which it can be legitimate for an interactive client to override the recommendation in the foregoing rule: because a human user has explicitly configured the client to associate a particular derived domain with a given source domain (e.g., for connection and identity checking purposes the user has explicitly approved "apps.example.net" as the derived domain associated with a source domain of "example.com").</t>
+        <t>When the connecting application is an interactive client, construction of the reference identifier SHOULD be based on the source domain (e.g., when specifying the server portion of the user's account name on the server or when explicitly configuring the client to connect to a particular host or URI as in <xref target='SIP-LOC'/>) and SHOULD NOT be based on a derived domain (e.g., a host name or domain name discovered through DNS resolution of the source domain).  This rule is important because only a match between the user inputs and a presented identifier enables the client to be sure that the certificate can legitimately be used to secure the connection.</t>
+        <t>There is one scenario in which it can be legitimate for an interactive client to override the recommendation in the foregoing rule: because a human user has pinned the application service's certificate to a derived domain, i.e., has explicitly configured the client to associate a particular derived domain with a given source domain (e.g., for connection and identity checking purposes the user has explicitly approved "apps.example.net" as the derived domain associated with a source domain of "example.com").</t>
       </section>
       <section title="Wildcard Certificates" anchor="security-wildcard">
         <t>Allowing the wildcard character in certificates has led to homograph attacks involving non-ASCII characters that look similar to characters commonly included in HTTP URLs, such as "/" and "?"; for discussion, see for example <xref target='Defeating-SSL'/>.</t>
@@ -1656,6 +1659,20 @@ specifications of each URI scheme.
 
 <reference anchor='XMPP'>
 <front>
+<title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
+<author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
+    <organization />
+</author>
+<date month='September' day='24' year='2010' />
+<abstract><t>This document defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a technology for streaming Extensible Markup Language (XML) elements for the purpose of exchanging structured information in close to real time between any two or more network-aware entities.  XMPP provides a generalized, extensible framework for incrementally exchanging XML data, upon which a variety of applications can be built.  The framework includes methods for stream setup and teardown, channel encryption, authentication of a client to a server and of one server to another server, and primitives for push-style messages, publication of network availability information ("presence"), and request-response interactions.  This document also specifies the format for XMPP addresses, which are fully internationalizable.  This document obsoletes RFC 3920.</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-16' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-16.txt' />
+</reference>
+
+<reference anchor='XMPP-OLD'>
+<front>
 <title abbrev='XMPP Core'>Extensible Messaging and Presence Protocol (XMPP): Core</title>
 <author initials='P.' surname='Saint-Andre' fullname='Peter Saint-Andre' role='editor'>
 <organization>Jabber Software Foundation</organization>
@@ -1682,20 +1699,6 @@ specifications of each URI scheme.
 <format type='TXT' octets='194313' target='ftp://ftp.isi.edu/in-notes/rfc3920.txt' />
 <format type='HTML' octets='237435' target='http://xml.resource.org/public/rfc/html/rfc3920.html' />
 <format type='XML' octets='234474' target='http://xml.resource.org/public/rfc/xml/rfc3920.xml' />
-</reference>
-
-<reference anchor='XMPPBIS'>
-<front>
-<title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
-<author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
-    <organization />
-</author>
-<date month='April' day='7' year='2010' />
-<abstract><t>This document defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a technology for streaming Extensible Markup Language (XML) elements for the purpose of exchanging structured information in close to real time between any two or more network-aware entities.  XMPP provides a generalized, extensible framework for incrementally exchanging XML data, upon which a variety of applications can be built.  The framework includes methods for stream setup and teardown, channel encryption, authentication of a client to a server and of one server to another server, and primitives for push-style messages, publication of network availability information ("presence"), and request-response interactions.  This document also specifies the format for XMPP addresses, which are fully internationalizable.  This document obsoletes RFC 3920.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-07' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-07.txt' />
 </reference>
 
     </references>
@@ -1808,7 +1811,7 @@ specifications of each URI scheme.
         <t>######</t>
       </section>
       <section title="XMPP (2004)" anchor="prior-xmpp">
-        <t>In 2004, <xref target='XMPP'/> specified the following text regarding server identity verification in XMPP:</t>
+        <t>In 2004, <xref target='XMPP-OLD'/> specified the following text regarding server identity verification in XMPP:</t>
         <t>######</t>
         <t>14.2. Certificate Validation</t>
         <t>When an XMPP peer communicates with another peer securely, it MUST validate the peer's certificate.  There are three possible cases:</t>
@@ -1827,7 +1830,7 @@ specifications of each URI scheme.
         </t>
         <t>In Case #2 and Case #3, implementations SHOULD act as in (2) above.</t>
         <t>######</t>
-        <t>At the time of this writing, <xref target='XMPPBIS'/> refers to this document for rules regarding server identity verification in XMPP.</t>
+        <t>At the time of this writing, <xref target='XMPP'/> refers to this document for rules regarding server identity verification in XMPP.</t>
       </section>
       <section title="NNTP (2006)" anchor="prior-nntp">
         <t>In 2006, <xref target='NNTP-TLS'/> specified the following text regarding server identity verification in NNTP:</t>
