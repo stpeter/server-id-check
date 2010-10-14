@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="October" day="13" year="2010"/>
+    <date month="October" day="14" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -67,7 +67,7 @@
             <t>The Extensible Messaging and Presence Protocol <xref target="XMPP"/>, for which see also <xref target="XMPP-OLD"/><vspace blankLines='1'/></t>
             <t>The Network News Transfer Protocol <xref target="NNTP"/>, for which see also <xref target="NNTP-TLS"/><vspace blankLines='1'/></t>
             <t>The NETCONF Configuration Protocol <xref target="NETCONF"/>, for which see also <xref target="NETCONF-SSH"/> and <xref target="NETCONF-TLS"/><vspace blankLines='1'/></t>
-            <t>The Syslog Protocol <xref target="SYSLOG"/>, for which see also <xref target="SYSLOG-TLS"/><vspace blankLines='1'/></t>
+            <t>The Syslog Protocol <xref target="SYSLOG"/>, for which see also <xref target="SYSLOG-TLS"/> and <xref target="SYSLOG-DTLS"/><vspace blankLines='1'/></t>
             <t>The Session Initiation Protocol <xref target="SIP"/>, for which see also <xref target="SIP-CERTS"/><vspace blankLines='1'/></t>
             <t>The Simple Network Management Protocol <xref target="SNMP"/>, for which see also <xref target="SNMP-TLS"/><vspace blankLines='1'/></t>
             <t>The General Internet Signalling Transport <xref target="GIST"/></t>
@@ -91,7 +91,7 @@
             <t>Move away from including and checking strings that look like domain names in the subject's Common Name.<vspace blankLines='1'/></t>
             <t>Move toward including and checking DNS domain names via the subjectAlternativeName extension designed for that purpose: dNSName.<vspace blankLines='1'/></t>
             <t>Move toward including and checking even more specific subjectAlternativeName extensions where appropriate for the using protocol (e.g., uniformResourceIdentifier and the otherName form SRVName).<vspace blankLines='1'/></t> 
-            <t>Move away from the use of so-called wildcard certificates (e.g., a certificate containing an identifier for "*.example.com").</t>
+            <t>Move away from the issuance of so-called wildcard certificates (e.g., a certificate containing an identifier for "*.example.com").</t>
           </list>
         </t>
         <t>Although these suggestions are not entirely consistent with all practices that are currently followed by certification authorities, client developers, and service providers, they reflect the best aspects of current practices and are expected to become more widely adopted in the coming years.</t>
@@ -153,7 +153,7 @@
           <t>Furthermore, this document also does not address various certification authority policies, such as:</t>
           <t>
             <list style='symbols'>
-              <t>What classes and types of certificates to issue and whether to apply different policies for them (e.g., allow the wildcard character in Class 2 certificates but not in Extended Validation certificates <xref target='EV-CERTS'/> or in Class 1 certificates).<vspace blankLines="1"/></t>
+              <t>What classes and types of certificates to issue and whether to apply different policies for them (e.g., allow the wildcard character in "Class 2" certificates but not in "Extended Validation" certificates <xref target='EV-CERTS'/> or in "Class 1" certificates).<vspace blankLines="1"/></t>
               <t>Whether to issue certificates based on IP addresses (or some other form, such as relative domain names) in addition to fully-qualified DNS domain names.<vspace blankLines="1"/></t>
               <t>Which identifiers to include (e.g., whether to include SRV-IDs or URI-IDs as defined in the body of this specification).<vspace blankLines="1"/></t>
               <t>How to certify or validate fully-qualified domain names and application service types.<vspace blankLines="1"/></t>
@@ -210,7 +210,7 @@
       </section>
 
       <section title="Acknowledgements" anchor="acknowledgements">
-        <t>The editors and contributors wish to thank the following individuals for their feedback and suggestions: Bernard Aboba, Richard Barnes, Uri Blumenthal, Nelson Bolyard, Kaspar Brand, Anthony Bryan, Ben Campbell, Scott Cantor, Wan-Teh Chang, Bil Corry, Dave Cridland, Dave Crocker, Cyrus Daboo, Charles Gardiner, Philip Guenther, Phillip Hallam-Baker, Bruno Harbulot, Wes Hardaker, David Harrington, Paul Hoffman, Love Hornquist Astrand, Henry Hotz, Russ Housley, Jeffrey Hutzelman, Simon Josefsson, Geoff Keating, John Klensin, Scott Lawrence, Matt McCutchen, Alexey Melnikov, Eddy Nigg, Ludwig Nussel, Joe Orton, Tom Petch, Yngve N. Pettersen, Tim Polk, Robert Relyea, Eric Rescorla, Pete Resnick, Martin Rex, Joe Salowey, Stefan Santesson, Jim Schaad, Rob Stradling, Michael Stroeder, Andrew Sullivan, Peter Sylvester, Martin Thomson, Paul Tiemann, Sean Turner, Jeffrey A. Williams, Nicolas Williams, Dan Wing, Dan Winship, and Stefan Winter.</t>
+        <t>The editors and contributors wish to thank the following individuals for their feedback and suggestions: Bernard Aboba, Richard Barnes, Uri Blumenthal, Nelson Bolyard, Kaspar Brand, Anthony Bryan, Ben Campbell, Scott Cantor, Wan-Teh Chang, Bil Corry, Dave Cridland, Dave Crocker, Cyrus Daboo, Charles Gardiner, Philip Guenther, Phillip Hallam-Baker, Bruno Harbulot, Wes Hardaker, David Harrington, Paul Hoffman, Love Hornquist Astrand, Henry Hotz, Russ Housley, Jeffrey Hutzelman, Simon Josefsson, Geoff Keating, John Klensin, Scott Lawrence, Matt McCutchen, Alexey Melnikov, Eddy Nigg, Ludwig Nussel, Joe Orton, Tom Petch, Yngve N. Pettersen, Tim Polk, Robert Relyea, Eric Rescorla, Pete Resnick, Martin Rex, Joe Salowey, Stefan Santesson, Jim Schaad, Rob Stradling, Michael Stroeder, Andrew Sullivan, Peter Sylvester, Martin Thomson, Paul Tiemann, Sean Turner, Nicolas Williams, Dan Wing, Dan Winship, and Stefan Winter.</t>
       </section>
 
     </section>
@@ -326,7 +326,7 @@ cn=www.example.com,c=GB,ou=Web Services
               <t>The list MUST include a DNS-ID.  A reference identifier of type DNS-ID can be directly constructed from a fully-qualified DNS domain name that is (a) contained in or securely derived from the inputs (i.e., the source domain), or (b) explicitly associated with the source domain by means of user configuration (i.e., a derived domain).<vspace blankLines='1'/></t>
               <t>If a server for the service type is typically discovered by means of DNS SRV records, then the list SHOULD include an SRV-ID.<vspace blankLines='1'/></t>
               <t>If a server for the service type is typically associated with a URI, then the list SHOULD include a URI-ID.<vspace blankLines='1'/></t>
-              <t>The list SHOULD NOT include a CN-ID; however, if a CN-ID is included despite this advice (e.g., because a profile of this specification encourages continued support for the CN-ID identifier type), it MUST be constructed only from the source domain and never from a derived domain.</t>
+              <t>The list MAY include a CN-ID, mainly for the sake of backward compatibility with existing infrastructure.</t>
             </list>
           </t>
           <t>The client does not need to construct the foregoing identifiers in the actual formats found in a certificate (e.g., as ASN.1 types), it only needs to construct the functional equivalent of such identifiers for matching purposes.</t>
@@ -353,8 +353,8 @@ cn=www.example.com,c=GB,ou=Web Services
           <t>If the DNS domain name portion of a reference identifier is an internationalized domain name, then an implementation MUST convert every label in the domain name to an A-label (as described in <xref target='IDNA-DEFS'/>) before checking the domain name.  Each label MUST match in order for the names to be considered to match, except as supplemented by the rule about checking of wildcard labels (<xref target='verify-domain-wildcards'/>).</t>
         </section>
         <section title="Checking of Wildcard Labels" anchor="verify-domain-wildcards">
-          <t>A client employing this specification's rules SHOULD NOT match the reference identifier against a presented identifier whose DNS domain name portion contains the wildcard character '*' as part or all of a label (following the definition of "label" from <xref target='DNS'/>).  For details, see <xref target='security-wildcards'/>.</t>
-          <t>However, if a client overrides the foregoing recommendation and therefore matches the reference identifier against a presented identifier whose DNS domain name portion contains the wildcard character '*', the following rules apply:</t>
+          <t>A client employing this specification's rules MAY match the reference identifier against a presented identifier whose DNS domain name portion contains the wildcard character '*' as part or all of a label (following the definition of "label" from <xref target='DNS'/>).  For information regarding the security characteristics of wildcard certificates, see <xref target='security-wildcards'/>.</t>
+          <t>If a client matches the reference identifier against a presented identifier whose DNS domain name portion contains the wildcard character '*', the following rules apply:</t>
           <t>
             <list style='numbers'>
               <t>The client SHOULD NOT attempt to match a presented identifier in which the wildcard character comprises a label other than the left-most label (e.g., do not match bar.*.example.net).<vspace blankLines='1'/></t>
@@ -402,7 +402,7 @@ cn=www.example.com,c=GB,ou=Web Services
         <t>As defined under <xref target='terminology'/>, a certificate is said to be "pinned" to a DNS domain name when a user has explicitly chosen to associate a service's certificate with the that domain name despite the fact that the certificate contains some other DNS domain name (e.g., the user has explicitly approved "apps.example.net" as a domain associated with a source domain of "example.com").  The cached name association MUST take account of both the certificate presented and the context in which it was accepted or configured (where the "context" includes the chain of certificates from the presented certificate to the trust anchor, the source domain, the service type, the service's derived domain and port number, and other relevant information such as the subject field's Common Name, Organization, and Country).</t>
       </section>
       <section title="Wildcard Certificates" anchor="security-wildcards">
-        <t>This document states that the wildcard character '*' SHOULD NOT be included in presented identifiers or checked by application clients; as a result, the rules provided in this document are more restrictive than the rules for many existing application technologies (see <xref target='prior'/>).  Several security considerations justify tightening the rules:</t>
+        <t>This document states that the wildcard character '*' SHOULD NOT be included in presented identifiers but MAY be checked by application clients (mainly for the sake of backward compatibility with existing infrastructure); as a result, the rules provided in this document are more restrictive than the rules for many existing application technologies (see <xref target='prior'/>).  Several security considerations justify tightening the rules:</t>
         <t>
           <list style='symbols'>
             <t>The inclusion of the wildcard character in certificates has led to homograph attacks involving non-ASCII characters that look similar to characters commonly included in HTTP URLs, such as "/" and "?"; for discussion, see for example <xref target='Defeating-SSL'/>.<vspace blankLines='1'/></t>
@@ -1502,6 +1502,24 @@ specifications of each URI scheme.
 <t>This document describes the syslog protocol, which is used to convey event notification messages. This protocol utilizes a layered architecture, which allows the use of any number of transport protocols for transmission of syslog messages. It also provides a message format that allows vendor-specific extensions to be provided in a structured way.&lt;/t>&lt;t> This document has been written with the original design goals for traditional syslog in mind. The need for a new layered specification has arisen because standardization efforts for reliable and secure syslog extensions suffer from the lack of a Standards-Track and transport-independent RFC. Without this document, each other standard needs to define its own syslog packet format and transport mechanism, which over time will introduce subtle compatibility issues. This document tries to provide a foundation that syslog extensions can build on. This layered architecture approach also provides a solid basis that allows code to be written once for each syslog feature rather than once for each transport. [STANDARDS TRACK]</t></abstract></front>
 <seriesInfo name='RFC' value='5424' />
 <format type='TXT' octets='85162' target='ftp://ftp.isi.edu/in-notes/rfc5424.txt' />
+</reference>
+
+<reference anchor='SYSLOG-DTLS'>
+<front>
+<title>Datagram Transport Layer Security (DTLS) Transport Mapping for Syslog</title>
+<author initials='J.' surname='Salowey' fullname='J. Salowey'>
+<organization /></author>
+<author initials='T.' surname='Petch' fullname='T. Petch'>
+<organization /></author>
+<author initials='R.' surname='Gerhards' fullname='R. Gerhards'>
+<organization /></author>
+<author initials='H.' surname='Feng' fullname='H. Feng'>
+<organization /></author>
+<date year='2010' month='October' />
+<abstract>
+<t>This document describes the transport of syslog messages over the Datagram Transport Layer Security (DTLS) protocol.  It provides a secure transport for syslog messages in cases where a connectionless transport is desired. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6012' />
+<format type='TXT' octets='24475' target='http://www.rfc-editor.org/rfc/rfc6012.txt' />
 </reference>
 
 <reference anchor='SYSLOG-TLS'>
