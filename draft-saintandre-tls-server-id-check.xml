@@ -737,12 +737,12 @@ specifications of each URI scheme.
 <author initials='C' surname='Daboo' fullname='Cyrus Daboo'>
     <organization />
 </author>
-<date month='February' day='5' year='2010' />
+<date month='May' day='12' year='2010' />
 <abstract><t>This specification describes how SRV records can be used to locate email services.</t></abstract>
 </front>
-<seriesInfo name='Internet-Draft' value='draft-daboo-srv-email-03' />
+<seriesInfo name='Internet-Draft' value='draft-daboo-srv-email-05' />
 <format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-daboo-srv-email-03.txt' />
+        target='http://www.ietf.org/internet-drafts/draft-daboo-srv-email-05.txt' />
 </reference>
 
 <reference anchor='EV-CERTS' target='http://www.cabforum.org/Guidelines_v1_2.pdf'>
