@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="October" day="20" year="2010"/>
+    <date month="October" day="25" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -272,7 +272,7 @@
         <t>Existing certificates often use a CN-ID in the subject field to represent a fully-qualified DNS domain name; for example, consider the following subject name, where the attribute of type Common Name contains a string whose form matches that of a fully-qualified DNS domain name of "www.example.com":</t>
         <figure>
           <artwork><![CDATA[
-CN=www.example.com,C=GB,OU=Web Services
+CN=www.example.com,OU=Examples-R-Us,C=GB
           ]]></artwork>
         </figure>
         <t>In general, this specification recommends and prefers use of subjectAltName entries (DNS-ID, SRV-ID, URI-ID, etc.) over use of the subject field (CN-ID) where possible, as more completely described in the following sections.  However, profiles of this specification can legitimately encourage continued support for the CN-ID identifier type if they have good reasons to do so, such as backward compatibility with deployed infrastructure.</t>
@@ -314,6 +314,7 @@ CN=www.example.com,C=GB,OU=Web Services
           </list>
         </t>
         <t>Naturally, in addition to checking identifiers, a client might complete further checks to ensure that the server is authorized to provide the requested service.  However, such checking is not a matter of verifying the application service identity presented in a certificate, and therefore methods for doing so (e.g., consulting local policy information) are out of scope for this document.</t>
+        <t><list style='empty'><t>Note:  In some application protocols, the procedure described in this section can be performed by an application server acting as a TLS client when verifying a server-to-server connection, not only by an application client when verifying a client-to-server connection (e.g, this is true of XMPP).  In this case, the application server verifies the identity of the peer server that is attempting to connect and therefore the reference identifier is in essence supplied by the peer server (e.g., as triggered by a request to send a message from an entity associated with the peer server to an entity associated with the application service).  Other than the source of the reference identifier and the inverted roles of the TLS client and TLS server, the verification process remains unchanged.</t></list></t>
       </section>
       <section title="Constructing a List of Reference Identifiers" anchor="verify-reference">
         <section title="Rules" anchor="verify-reference-rules">
