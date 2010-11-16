@@ -178,10 +178,10 @@
             <t hangText="identifier:">A particular instance of an identifier type that is either presented by a server in a certificate or referenced by a client for matching purposes.<vspace blankLines='1'/></t>
             <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore that can also be used for matching purposes; the types covered in this specification are:
               <vspace blankLines='1'/><list style='symbols'>
-                <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject field that contains one and only one attribute-type-and-value pair of type Common Name (CN); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
+                <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject field that contains one and only one attribute-type-and-value pair of type Common Name (CN), where the value matches the overall form of a domain name (informally, dot-separated labels); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
                 <t>DNS-ID = a subjectAltName entry of type dNSName; see <xref target='PKIX'/><vspace blankLines='1'/></t>
                 <t>SRV-ID = a subjectAltName entry of type otherName whose name form is SRVName; see <xref target='SRVNAME'/><vspace blankLines='1'/></t>
-                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier; see <xref target='PKIX'/></t>
+                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier, where the value includes both (i) a scheme and (ii) an authority component whose host subcomponent matches the reg-name rule from <xref target='URI'/>; see <xref target='PKIX'/></t>
               </list>
               <vspace blankLines='1'/>
             </t>
@@ -276,7 +276,13 @@
 
    C=CA,O=Example Internetworking,CN=mail.example.net
 
-   O=Free Chat Server,CN=im.example.org,C=IM
+   O=Example Org,CN=im.example.org,C=IM
+          ]]></artwork>
+        </figure>
+        <t>However, the Common Name might contain a human-readable string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name:</t>
+        <figure>
+          <artwork><![CDATA[
+   CN=A Free Chat Service,O=Example Org,C=IM
           ]]></artwork>
         </figure>
         <t>In general, this specification recommends and prefers use of subjectAltName entries (DNS-ID, SRV-ID, URI-ID, etc.) over use of the subject field (CN-ID) where possible, as more completely described in the following sections.  However, profiles of this specification can legitimately encourage continued support for the CN-ID identifier type if they have good reasons to do so, such as backward compatibility with deployed infrastructure.</t>
@@ -351,9 +357,9 @@
         <t>
           <list style='symbols'>
             <t>A reference identifier of type DNS-ID does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes.<vspace blankLines='1'/></t>
-            <t>A reference identifier of type CN-ID also does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes; note that a CN-ID does not necessarily contain a string whose form matches that of a DNS domain name, because the Common Name might simply be a human-readable name for the service instead of a domain name.<vspace blankLines='1'/></t>
+            <t>A reference identifier of type CN-ID also does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes; note that this document specififes that a CN-ID always contains a string whose form matches that of a DNS domain name (to differentiate a CN-ID from a Common Name that contains a human-readable name for the service instead of a DNS domain name).<vspace blankLines='1'/></t>
             <t>For a reference identifier of type SRV-ID, the DNS domain name portion is the Name and the application type portion is the Service.<vspace blankLines='1'/></t>
-            <t>For a reference identifier of type URI-ID, the DNS domain name portion is the reg-name part of the authority component and the application type portion is the scheme name matching the <xref target='ABNF'/> "scheme" rule from <xref target='URI'/> (not including the ':' separator); note that the authority component might not contain a reg-name and that extraction of the reg-name might necessitate normalization of the URI (as explained in <xref target='URI'/>).</t>
+            <t>For a reference identifier of type URI-ID, the DNS domain name portion is the reg-name part of the authority component and the application type portion is the scheme name matching the <xref target='ABNF'/> "scheme" rule from <xref target='URI'/> (not including the ':' separator); note that this document specifies that a URI-ID always contains an authority component whose host subcomponent contains a reg-name (to differentiate a URI-ID from a uniformResourceIdentifier entry that contains an IP address or that does not contain an authority component), and that extraction of the reg-name might necessitate normalization of the URI (as explained in <xref target='URI'/>).</t>
           </list>
         </t>
         <t>Detailed comparison rules for matching the DNS domain name portion and application type portion of the reference identifier are provided in the following sections.</t>
