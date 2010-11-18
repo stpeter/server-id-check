@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="November" day="16" year="2010"/>
+    <date month="November" day="17" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -178,10 +178,10 @@
             <t hangText="identifier:">A particular instance of an identifier type that is either presented by a server in a certificate or referenced by a client for matching purposes.<vspace blankLines='1'/></t>
             <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore that can also be used for matching purposes; the types covered in this specification are:
               <vspace blankLines='1'/><list style='symbols'>
-                <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject field that contains one and only one attribute-type-and-value pair of type Common Name (CN), where the value matches the overall form of a domain name (informally, dot-separated labels); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
+                <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject field that contains one and only one attribute-type-and-value pair of type Common Name (CN), where the value matches the overall form of a domain name (informally, dot-separated letter-digit-hyphen labels); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
                 <t>DNS-ID = a subjectAltName entry of type dNSName; see <xref target='PKIX'/><vspace blankLines='1'/></t>
                 <t>SRV-ID = a subjectAltName entry of type otherName whose name form is SRVName; see <xref target='SRVNAME'/><vspace blankLines='1'/></t>
-                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier, where the value includes both (i) a scheme and (ii) an authority component whose host subcomponent matches the reg-name rule from <xref target='URI'/>; see <xref target='PKIX'/></t>
+                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier, where the value includes both (i) a "scheme" and (ii) an "authority" component whose "host" subcomponent matches the "reg-name" rule (where the quoted terms represent the associated <xref target='ABNF'/> rules from <xref target='URI'/>); see <xref target='PKIX'/></t>
               </list>
               <vspace blankLines='1'/>
             </t>
@@ -254,7 +254,7 @@
         <t>
           <list style='numbers'>
             <t>A "traditional domain name", i.e., a fully-qualified domain name or "FQDN" (see <xref target='DNS-CONCEPTS'/>) all of whose labels are "LDH labels" as defined in <xref target='IDNA-DEFS'/>.  Informally, such labels are constrained to <xref target='US-ASCII'/> letters, digits, and the hyphen, with the hyphen prohibited in the first character position.  Additional qualifications apply (please refer to the above-referenced specifications for details) but they are not relevant to this specification.<vspace blankLines='1'/></t>
-            <t>An "internationalized domain name", i.e., a DNS domain name that conforms to the overall form of a domain name (dot-separated labels) but that can include appropriately encoded Unicode code points outside the traditional US-ASCII range (more precisely, either U-labels or A-labels as described in <xref target='IDNA-DEFS'/> and the associated documents).</t>
+            <t>An "internationalized domain name", i.e., a DNS domain name that conforms to the overall form of a domain name (informally, dot-separated letter-digit-hyphen labels) but that can include appropriately encoded Unicode code points outside the traditional US-ASCII range (more precisely, either U-labels or A-labels as described in <xref target='IDNA-DEFS'/> and the associated documents).</t>
           </list>
         </t>
       </section>
@@ -272,17 +272,17 @@
         <t>Existing certificates often use a CN-ID in the subject field to represent a fully-qualified DNS domain name; for example, consider the following three subject names, where the attribute of type Common Name contains a string whose form matches that of a fully-qualified DNS domain name ("www.example.com", "mail.example.net", and "im.example.org" respectively):</t>
         <figure>
           <artwork><![CDATA[
-   CN=www.example.com,O=Examples-R-Us,C=US
+   CN=im.example.org,O=Example Org,C=GB
 
    C=CA,O=Example Internetworking,CN=mail.example.net
 
-   O=Example Org,CN=im.example.org,C=IM
+   O=Examples-R-Us,CN=www.example.com,C=US
           ]]></artwork>
         </figure>
         <t>However, the Common Name might contain a human-readable string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name:</t>
         <figure>
           <artwork><![CDATA[
-   CN=A Free Chat Service,O=Example Org,C=IM
+   CN=A Free Chat Service,O=Example Org,C=GB
           ]]></artwork>
         </figure>
         <t>In general, this specification recommends and prefers use of subjectAltName entries (DNS-ID, SRV-ID, URI-ID, etc.) over use of the subject field (CN-ID) where possible, as more completely described in the following sections.  However, profiles of this specification can legitimately encourage continued support for the CN-ID identifier type if they have good reasons to do so, such as backward compatibility with deployed infrastructure.</t>
@@ -300,7 +300,7 @@
             <t>If the service using the certificate deploys a technology in which a server is typically associated with a URI (e.g., this is true of <xref target='SIP'/>), then the certificate SHOULD include a URI-ID; the scheme SHALL be that of the protocol associated with the service type and the authority component SHALL be the fully-qualified DNS domain name of the service.<vspace blankLines='1'/></t>
             <t>The certificate MAY include other application-specific identifiers for types that were defined before publication of <xref target='SRVNAME'/> (e.g., XmppAddr for <xref target='XMPP'/>) or for which service names or URI schemes do not exist; however, such application-specific identifiers are not applicable to all application technologies and therefore are out of scope for this specification.<vspace blankLines='1'/></t>
             <t>Even though many deployed clients still check for the CN-ID within the certificate subject field, the certificate SHOULD NOT represent the server's fully-qualified DNS domain name in a CN-ID unless a profile of this specification encourages continued support for the CN-ID identifier type.<vspace blankLines='1'/></t>
-            <t>The certificate MAY contain more than one DNS-ID, SRV-ID, or URI-ID (the certificate cannot contain more than one CN-ID, given the definition of CN-ID provided under <xref target='terminology'/>).<vspace blankLines='1'/></t>
+            <t>The certificate MAY contain more than one DNS-ID, SRV-ID, or URI-ID (but SHOULD NOT contain more than one CN-ID).<vspace blankLines='1'/></t>
             <t>Unless a profile of this specification allows continued support for the wildcard character '*', the fully-qualified DNS domain name portion of a presented identifier SHOULD NOT contain the wildcard character, whether as the complete left-most label within the identifier (following the definition of "label" from <xref target='DNS'/>, e.g., "*.example.com") or as a fragment thereof (e.g., *oo.example.com, f*o.example.com, or foo*.example.com).  For details, see <xref target='security-wildcards'/>.</t>
           </list>
         </t>
@@ -357,9 +357,9 @@
         <t>
           <list style='symbols'>
             <t>A reference identifier of type DNS-ID does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes.<vspace blankLines='1'/></t>
-            <t>A reference identifier of type CN-ID also does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes; note that this document specififes that a CN-ID always contains a string whose form matches that of a DNS domain name (to differentiate a CN-ID from a Common Name that contains a human-readable name for the service instead of a DNS domain name).<vspace blankLines='1'/></t>
+            <t>A reference identifier of type CN-ID also does not include an application type portion and thus can be used directly as the DNS domain name for comparison purposes; note that this document specifies that a CN-ID always contains a string whose form matches that of a DNS domain name (thus differentiating a CN-ID from a Common Name containing a human-friendly name).<vspace blankLines='1'/></t>
             <t>For a reference identifier of type SRV-ID, the DNS domain name portion is the Name and the application type portion is the Service.<vspace blankLines='1'/></t>
-            <t>For a reference identifier of type URI-ID, the DNS domain name portion is the reg-name part of the authority component and the application type portion is the scheme name matching the <xref target='ABNF'/> "scheme" rule from <xref target='URI'/> (not including the ':' separator); note that this document specifies that a URI-ID always contains an authority component whose host subcomponent contains a reg-name (to differentiate a URI-ID from a uniformResourceIdentifier entry that contains an IP address or that does not contain an authority component), and that extraction of the reg-name might necessitate normalization of the URI (as explained in <xref target='URI'/>).</t>
+            <t>For a reference identifier of type URI-ID, the DNS domain name portion is the reg-name part of the authority component and the application type portion is the scheme name matching the <xref target='ABNF'/> "scheme" rule from <xref target='URI'/> (not including the ':' separator); note that this document specifies that a URI-ID always contains an authority component whose host subcomponent contains a reg-name (thus differentiating a URI-ID from a uniformResourceIdentifier entry that contains an IP address or that does not contain an authority component), and that extraction of the reg-name might necessitate normalization of the URI (as explained in <xref target='URI'/>).</t>
           </list>
         </t>
         <t>Detailed comparison rules for matching the DNS domain name portion and application type portion of the reference identifier are provided in the following sections.</t>
@@ -1710,12 +1710,12 @@ specifications of each URI scheme.
 <author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
     <organization />
 </author>
-<date month='October' day='6' year='2010' />
+<date month='November' day='17' year='2010' />
 <abstract><t>This document defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a technology for streaming Extensible Markup Language (XML) elements for the purpose of exchanging structured information in close to real time between any two or more network-aware entities.  XMPP provides a generalized, extensible framework for incrementally exchanging XML data, upon which a variety of applications can be built.  The framework includes methods for stream setup and teardown, channel encryption, authentication of a client to a server and of one server to another server, and primitives for push-style messages, publication of network availability information ("presence"), and request-response interactions.  This document also specifies the format for XMPP addresses, which are fully internationalizable.  This document obsoletes RFC 3920.</t></abstract>
 </front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-17' />
+<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-19' />
 <format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-17.txt' />
+        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-19.txt' />
 </reference>
 
 <reference anchor='XMPP-OLD'>
