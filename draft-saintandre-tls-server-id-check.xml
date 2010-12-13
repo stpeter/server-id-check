@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="December" day="10" year="2010"/>
+    <date month="December" day="13" year="2010"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -61,7 +61,7 @@
 
     <section title="Introduction" anchor="intro">
       <section title="Motivation" anchor="motivation">
-        <t>The visible face of the Internet largely consists of services that employ a client-server architecture in which an interactive or automated client communicates with an application service in order to retrieve or upload information, communicate with other entities, or access a broader network of services.  When a client communicates with an application service using Transport Layer Security <xref target='TLS'/> or Datagram Transport Layer Security <xref target='DTLS'/>, it references some notion of the server's identity while attempting to establish secure communication (e.g., "the website at example.com").  Likewise, during TLS negotiation the server presents its notion of the service's identity in the form of a public-key certificate that was issued by a certification authority (CA) in the context of the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/>.  Informally, we can think of these identities as the client's "reference identity" and the server's "presented identity" (these rough ideas are defined more precisely later in this document through the concept of particular identifiers).  In general, a client needs to verify that the server's presented identity matches its reference identity so it can be sure that the certificate can legitimately be used to authenticate the communication.</t> 
+        <t>The visible face of the Internet largely consists of services that employ a client-server architecture in which an interactive or automated client communicates with an application service in order to retrieve or upload information, communicate with other entities, or access a broader network of services.  When a client communicates with an application service using Transport Layer Security <xref target='TLS'/> or Datagram Transport Layer Security <xref target='DTLS'/>, it references some notion of the server's identity (e.g., "the website at example.com") while attempting to establish secure communication.  Likewise, during TLS negotiation the server presents its notion of the service's identity in the form of a public-key certificate that was issued by a certification authority (CA) in the context of the Internet Public Key Infrastructure using X.509 <xref target='PKIX'/>.  Informally, we can think of these identities as the client's "reference identity" and the server's "presented identity" (these rough ideas are defined more precisely later in this document through the concept of particular identifiers).  In general, a client needs to verify that the server's presented identity matches its reference identity so it can be sure that the certificate can legitimately be used to authenticate the communication.</t>
         <t>Many application technologies adhere to the pattern just outlined, including but not limited to the following:</t>
         <t>
           <list style="symbols">
@@ -84,9 +84,9 @@
 
       <section title="Applicability and Audience" anchor="applicability">
         <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>.  Therefore, <xref target='PKIX'/> is authoritative on any point that might also be discussed in this document.  Furthermore, <xref target='PKIX'/> also governs any certificate-related topic on which this document is silent, including but limited to certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths.</t>
-        <t>This document addresses only name forms in the leaf server certificate, not any name forms in the chain of certificates used to validate the server certificate.  Therefore, in order to ensure proper authentication, application clients need to verify the entire certification path.</t>
+        <t>This document addresses only name forms in the leaf "end entity" server certificate, not any name forms in the chain of certificates used to validate the server certificate.  Therefore, in order to ensure proper authentication, application clients need to verify the entire certification path per <xref target='PKIX'/>.</t>
         <t>This document also does not supersede the rules for verifying service identity provided in specifications for existing application protocols published prior to this BCP, such as those excerpted under <xref target='prior'/>.  However, the best current practices described here can be referenced by future specifications, including updates to specifications for existing application protocols if the relevant technology communities agree to do so.  It is also expected that this document will be updated or obsoleted in the future as best practices for issuance and verification of PKIX certificates continue to evolve through more widespread implementation and deployment of TLS-protected application services over the Internet.</t>
-        <t>The primary audience for this document consists of application protocol designers, who might reference this document instead of defining their own rules for the representation and verification of application service identity.  Secondarily, the audience consists of certification authorities, client developers, service providers, and other members of technology communities that might re-use the recommendations in this document when defining certificate issuance policies, writing software algorithms for identity matching, generating certificate signing requests, and so forth.</t>
+        <t>The primary audience for this document consists of application protocol designers, who can reference this document instead of defining their own rules for the representation and verification of application service identity.  Secondarily, the audience consists of certification authorities, client developers, service providers, and other members of technology communities that can re-use the recommendations in this document when defining certificate issuance policies, writing software algorithms for identity matching, generating certificate signing requests, and so forth.</t>
       </section>
 
       <section title="Overview of Recommendations" anchor="overview">
@@ -130,7 +130,7 @@
 
                 <vspace blankLines="1"/> 
 
-                Furthermore, we focus here on application service identities, not specific resources located at such services.  Therefore this document discusses Uniform Resource Identifiers <xref target='URI'/> only as a way to communicate a DNS domain name (via the URI "authority" component), not as a way to communicate other aspects of a service such as a specific file (via the URI "path" component) or script (via the URI "query" component).
+                Furthermore, we focus here on application service identities, not specific resources located at such services.  Therefore this document discusses Uniform Resource Identifiers <xref target='URI'/> only as a way to communicate a DNS domain name (via the URI "authority" component), not as a way to communicate other aspects of a service such as a specific resource (via the URI "path" component) or parameters (via the URI "query" component).
 
                 <vspace blankLines="1"/> 
 
@@ -152,7 +152,7 @@
 
                 <vspace blankLines="1"/> 
                 
-                Some deployed application technologies use a web of trust model based on or similar to OpenPGP <xref target='OPENPGP'/>, or use self-signed certificates, or are deployed on networks that are not directly connected to the public Internet and therefore cannot depend on Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol <xref target='OCSP'/> to check CA-issued certificates.  However, the method for binding a public key to a digital identity in OpenPGP differs essentially from the method in X.509, the data in self-signed certificates has not been certified by a third party in any way, and checking of CA-issued certificates via CRLs or OSCP is critically important to maintaining the security of PKIX-based systems.  Attempting to define best practices for such technologies would unduly complicate the rules defined in this specification.
+                Some deployed application technologies use a web of trust model based on or similar to OpenPGP <xref target='OPENPGP'/>, or use self-signed certificates, or are deployed on networks that are not directly connected to the public Internet and therefore cannot depend on Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol <xref target='OCSP'/> to check CA-issued certificates.  However, the method for binding a public key to an identifier in OpenPGP differs essentially from the method in X.509, the data in self-signed certificates has not been certified by a third party in any way, and checking of CA-issued certificates via CRLs or OSCP is critically important to maintaining the security of PKIX-based systems.  Attempting to define best practices for such technologies would unduly complicate the rules defined in this specification.
 
                 <vspace blankLines='1'/>
               </t>
@@ -202,16 +202,16 @@
             <t hangText="delegated domain:">A domain name or host name that is explicitly configured for communicating with the source domain, by either (a) the human user controlling an interactive client or (b) a trusted administrator.  In case (a), one example of delegation is an account setup that specifies the domain name of a particular host to be used for retrieving information or connecting to a network, which might be different from the server portion of the user's account name (e.g., a server at mailhost.example.com for connecting to an IMAP server hosting an email address of juliet@example.com).  In case (b), one example of delegation is an admin-configured host-to-address/address-to-host lookup table.<vspace blankLines='1'/></t>
             <t hangText="derived domain:">A domain name or host name that a client has derived from the source domain in an automated fashion (e.g., by means of a <xref target='DNS-SRV'/> lookup).<vspace blankLines='1'/></t>
             <t hangText="identifier:">A particular instance of an identifier type that is either presented by a server in a certificate or referenced by a client for matching purposes.<vspace blankLines='1'/></t>
-            <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore that can also be used for matching purposes; the PKIX specification <xref target='PKIX'/> and various PKIX extensions define the following identifiers of interest:
+            <t hangText="identifier type:">A formally defined category of identifier that can be included in a certificate and therefore that can also be used for matching purposes.  For conciseness and convenience, we define the following identifier types of interest, which are based on those found in the PKIX specification <xref target='PKIX'/> and various PKIX extensions.
               <vspace blankLines='1'/><list style='symbols'>
                 <t>CN-ID = a Relative Distinguished Name (RDN) in the certificate subject field that contains one and only one attribute-type-and-value pair of type Common Name (CN), where the value matches the overall form of a domain name (informally, dot-separated letter-digit-hyphen labels); see <xref target='PKIX'/> and also <xref target='LDAP-SCHEMA'/><vspace blankLines='1'/></t>
                 <t>DNS-ID = a subjectAltName entry of type dNSName; see <xref target='PKIX'/><vspace blankLines='1'/></t>
                 <t>SRV-ID = a subjectAltName entry of type otherName whose name form is SRVName; see <xref target='SRVNAME'/><vspace blankLines='1'/></t>
-                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier whose value includes both (i) a "scheme" and (ii) an "authority" component whose "host" subcomponent matches the "reg-name" rule (where the quoted terms represent the associated <xref target='ABNF'/> rules from <xref target='URI'/>); see <xref target='PKIX'/> and <xref target='URI'/></t>
+                <t>URI-ID = a subjectAltName entry of type uniformResourceIdentifier whose value includes both (i) a "scheme" and (ii) an "authority" component whose "host" subcomponent matches the "reg-name" rule (where the quoted terms represent the associated <xref target='ABNF'/> productions from <xref target='URI'/>); see <xref target='PKIX'/> and <xref target='URI'/></t>
               </list>
               <vspace blankLines='1'/>
             </t>
-            <t hangText="interactive client:">A software agent or device that is directly controlled by a human user.  (Other specifications related to security and application protocols, such as <xref target='WSC-UI'/>, often refer to this entity as a "user agent"; however that term is neither entirely accurate nor consistent with the terminology of common application protocols such as <xref target='HTTP'/>.)<vspace blankLines='1'/></t>
+            <t hangText="interactive client:">A software agent or device that is directly controlled by a human user.  (Other specifications related to security and application protocols, such as <xref target='WSC-UI'/>, often refer to this entity as a "user agent".<vspace blankLines='1'/></t>
             <t hangText="pinning:">The act of establishing a cached name association between the application service's certificate and one of the client's reference identifiers, despite the fact that none of the presented identifiers matches the given reference identifier.  Pinning is accomplished by allowing a human user to positively accept the mismatch during an attempt to communicate with the application service.  Once a cached name association is established, the certificate is said to be pinned to the reference identifier and in future communication attempts the client simply verifies that the service's presented certificate matches the pinned certificate, as described under <xref target='verify-outcome-pin'/>.  (A similar definition of "pinning" is provided in <xref target='WSC-UI'/>.)<vspace blankLines='1'/></t>
             <t hangText="PKIX:">PKIX is a short name for the Internet Public Key Infrastructure using X.509 defined in RFC 5280 [PKIX], which comprises a profile of the X.509v3 certificate specifications and X.509v2 certificate revocation list (CRL) specifications for use in the Internet.<vspace blankLines='1'/></t>
             <t hangText="PKIX-based system:">A software implementation or deployed service that makes use of X.509v3 certificates and X.509v2 certificate revocation lists (CRLs).<vspace blankLines='1'/></t>
@@ -265,14 +265,15 @@
 +-----------+-----------+---------------+
           ]]></artwork>
         </figure>
-        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Ideally, protocol specifications that reference this document will specify which identifiers are mandatory-to-implement by servers and clients, which identifiers ought to be supported by certificate issuers, and which identifiers ought to be requested by application service providers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).  However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
+        <t>When implementing software, deploying services, and issuing certificates for secure PKIX-based authentication, it is important to keep these distinctions in mind.  In particular, best practices differ somewhat for application server implementations, application client implementations, application service providers, and certification authorities.  Ideally, protocol specifications that reference this document will specify which identifiers are mandatory-to-implement by servers and clients, which identifiers ought to be supported by certificate issuers, and which identifiers ought to be requested by application service providers.  Because these requirements differ across applications, it is impossible to categorically stipulate universal rules (e.g., that all software implementations, service providers, and certification authorities for all application protocols need to use or support DNS-IDs as a baseline for the purpose of interoperability).</t>
+         <t>However, it is preferable that each application protocol will at least define a baseline that applies to the community of software developers, application service providers, and CAs actively using or supporting that technology (one such community, the CA/Browser Forum, has codified such a baseline for "Extended Validation Certificates" in <xref target='EV-CERTS'/>).</t>
       </section>
       <section title="DNS Domain Names" anchor="names-dns">
         <t>For the purposes of this specification, the name of an application service is (or is based on) a DNS domain name that conforms to one of the following forms:</t>
         <t>
           <list style='numbers'>
             <t>A "traditional domain name", i.e., a fully-qualified DNS domain name or "FQDN" (see <xref target='DNS-CONCEPTS'/>) all of whose labels are "LDH labels" as described in <xref target='IDNA-DEFS'/>.  Informally, such labels are constrained to <xref target='US-ASCII'/> letters, digits, and the hyphen, with the hyphen prohibited in the first character position.  Additional qualifications apply (please refer to the above-referenced specifications for details) but they are not relevant to this specification.<vspace blankLines='1'/></t>
-            <t>An "internationalized domain name", i.e., a DNS domain name that conforms to the overall form of a domain name (informally, dot-separated letter-digit-hyphen labels) but that can include appropriately encoded Unicode code points outside the traditional US-ASCII range (more precisely, either U-labels or A-labels as described in <xref target='IDNA-DEFS'/> and the associated documents).</t>
+            <t>An "internationalized domain name", i.e., a DNS domain name that conforms to the overall form of a domain name (informally, dot-separated letter-digit-hyphen labels) but includes at least one label containing appropriately encoded Unicode code points outside the traditional US-ASCII range. That is, it contains at least one U-label or A-label, but otherwise may contain any mixture of NR-LDH labels, A-labels, or U-labels, as described in <xref target='IDNA-DEFS'/> and the associated documents).</t>
           </list>
         </t>
       </section>
@@ -297,18 +298,24 @@
    O=Examples-R-Us,CN=www.example.com,C=US
           ]]></artwork>
         </figure>
-        <t>However, the Common Name might contain a human-readable string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name (a certificate with such a Common Name will typically have at least one subjectAltName entry that contains the fully-qualified DNS domain name):</t>
+        <t>However, a Common Name might contain a human-friendly string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name (a certificate with such a single Common Name will tyupically have at least one subjectAltName entry containing the fully-qualified DNS domain name):</t>
         <figure>
           <artwork><![CDATA[
    CN=A Free Chat Service,O=Example Org,C=GB
           ]]></artwork>
         </figure>
+        <t>Or, a certificate's subject might contain both a CN-ID as well as another common name attribute containing a human-friendly string:</t>
+        <figure>
+          <artwork><![CDATA[
+   CN=A Free Chat Service,CN=im.example.org,O=Example Org,C=GB
+          ]]></artwork>
+        </figure>
         <t>In general, this specification recommends and prefers use of subjectAltName entries (DNS-ID, SRV-ID, URI-ID, etc.) over use of the subject field (CN-ID) where possible, as more completely described in the following sections.  However, specifications that re-use this one can legitimately encourage continued support for the CN-ID identifier type if they have good reasons to do so, such as backward compatibility with deployed infrastructure (see, for example, <xref target='EV-CERTS'/>).</t>
         <section title="Implementation Notes" anchor="names-pkix-notes">
           <t>Confusion sometimes arises from different renderings or encodings of the hierarchical information contained in a certificate.</t>
-          <t>Certificates are binary objects and are encoded using the Distinguished Encoding Rules (DER) specified in <xref target='X.690'/>.  However, some implementations generate displayable (a.k.a. printable) renderings of the certificate issuer, subject field, and subjectAltName extension, and these renderings convert the DER-encoded sequences into a "string representation" before being displayed.  Because a Distinguished Name (DN) is an ordered sequence, order is typically preserved in the DN string representations, although the two most prevalent DN string representations differ in employing left-to-right vs. right-to-left ordering.  However, because a Relative Distinguished Name (RDN) is an unordered group of attribute-type-and-value pairs, the string representation of an RDN can differ from the canonical DER encoding (and the order of attribute-type-and-value pairs can differ in the RDN string representations or display orders provided by various implementations).  Furthermore, various specifications refer to the order of RDNs using terminology that is not directly related to the information hierarchy, such as "most specific" vs. "least specific", "left-most" vs. "right-most", "first" vs. "last", or "most significant" vs. "least significant" (see for example <xref target='LDAP-DN'/>).</t>
-          <t>To reduce confusion, in this specification we avoid such terms and instead use the terms provided under <xref target='terminology'/>; in particular, we do not use the term "(most specific) Common Name field in the subject field" from <xref target='HTTP-TLS'/> and instead state that a CN-ID is a Relative Distinguished Name (RDN) in the certificate subject containing one and only one attribute-type-and-value pair of type Common Name (thus removing the possibility that an RDN might contain multiple AVAs of type CN, one of which would be considered "most specific").</t>
-          <t>Finally, although theoretically some consider the order of RDNs within a DN to have meaning, in practice that rule is not observed.  An AVA of type CN is considered to be valid at any position within the subject field DN.</t>
+          <t>Certificates are binary objects and are encoded using the Distinguished Encoding Rules (DER) specified in <xref target='X.690'/>.  However, some implementations generate displayable (a.k.a. printable) renderings of the certificate issuer, subject field, and subjectAltName extension, and these renderings convert the DER-encoded sequences into a "string representation" before being displayed.  Because a certificate subject field (of type Name <xref target='X.509'/>, the same as for a Distinguished Name (DN) <xref target='X.501'/>) is an ordered sequence, order is typically preserved in subject string representations, although the two most prevalent subject (and DN) string representations differ in employing left-to-right vs. right-to-left ordering.  However, because a Relative Distinguished Name (RDN) is an unordered group of attribute-type-and-value pairs, the string representation of an RDN can differ from the canonical DER encoding (and the order of attribute-type-and-value pairs can differ in the RDN string representations or display orders provided by various implementations).  Furthermore, various specifications refer to the order of RDNs in DNs or certificate subject fields using terminology that is implicitly related to an information hierarchy (which may or may not actually exist), such as "most specific" vs. "least specific", "left-most" vs. "right-most", "first" vs. "last", or "most significant" vs. "least significant" (see for example <xref target='LDAP-DN'/>).</t>
+          <t>To reduce confusion, in this specification we avoid such terms and instead use the terms provided under <xref target='terminology'/>; in particular, we do not use the term "(most specific) Common Name field in the subject field" from <xref target='HTTP-TLS'/> and instead state that a CN-ID is a Relative Distinguished Name (RDN) in the certificate subject containing one and only one attribute-type-and-value pair of type Common Name (thus removing the possibility that an RDN might contain multiple AVAs of type CN, one of which could be considered "most specific").</t>
+          <t>Finally, although theoretically some consider the order of RDNs within a subject field to have meaning, in practice that rule is often not observed.  An AVA of type CN is considered to be valid at any position within the subject field.</t>
         </section>
       </section>
     </section>
@@ -354,7 +361,7 @@
           <t>The client MUST construct a list of acceptable reference identifiers, and MUST do so independently of the identifiers presented by the service.</t>
           <t>The inputs used by the client to construct its list of reference identifiers might be a URI that a user has typed into an interface (e.g., an HTTPS URL for a web site), configured account information (e.g., the domain name of a particular host or URI used for retrieving information or connecting to a network, which might be different from the DNS domain name portion of a username), a hyperlink in a web page that triggers a browser to retrieve a media object or script, or some other combination of information that can yield a source domain and a service type.</t>
           <t>The client might need to extract the source domain and service type from the input(s) it has received.  The extracted data MUST include only information that can be securely parsed out of the inputs (e.g., parsing the fully-qualified DNS domain name out of the "authority" component of a URI or deriving the service type from the scheme of a URI) or information that is derived in a manner not subject to subversion by network attackers (e.g., pulling the data from a delegated domain that is explicitly established via client or system configuration, resolving the data via <xref target='DNSSEC'/>, or obtaining the data from a third-party domain mapping service in which a human user has explicitly placed trust and with which the client communicates over a connection or association that provides both mutual authentication and integrity checking).  These considerations apply only to extraction of the source domain from the inputs; naturally, if the inputs themselves are invalid or corrupt (e.g., a user has clicked a link provided by a malicious entity in a phishing attack), then the client might end up communicating with an unexpected application service.</t>
-          <t>(As an example, given an input URI of &lt;sips:alice@example.net&gt;, a client would derive the service type "sip" from the "scheme" and parse the domain name "example.net" from the "authority" component.)</t>
+          <t><list style='empty'><t>Example: Given an input URI of &lt;sips:alice@example.net&gt;, a client would derive the service type "sip" from the "scheme" and parse the domain name "example.net" from the "authority" component.</t></list></t>
           <t>Each reference identifier in the list SHOULD be based on the source domain and SHOULD NOT be based on a derived domain (e.g., a host name or domain name discovered through DNS resolution of the source domain).  This rule is important because only a match between the user inputs and a presented identifier enables the client to be sure that the certificate can legitimately be used to secure the client's communication with the server.  There is only one scenario in which it is acceptable for an interactive client to override the recommendation in this rule and therefore communicate with a domain name other than the source domain: because a human user has "pinned" the application service's certificate to the alternative domain name as further discussed under <xref target='verify-outcome-fallback'/> and <xref target='security-pinning'/>.  In this case, the inputs used by the client to construct its list of reference identifiers might include more than one fully-qualified DNS domain name, i.e., both (a) the source domain and (b) the alternative domain contained in the pinned certificate.</t>
           <t>Using the combination of fully-qualified DNS domain name(s) and service type, the client constructs a list of reference identifiers in accordance with the following rules:</t>
           <t>
@@ -375,9 +382,9 @@
           <t>An instant messaging (IM) client that is connecting via XMPP to the IM service at "im.example.org" might have three reference identifiers: an SRV-ID of "_xmpp-client.im.example.org" (see <xref target='XMPP'/>), a DNS-ID of "im.example.org", and an XMPP-specific "XmppAddr" of "im.example.org" (see <xref target='XMPP'/>).</t>
         </section>
       </section>
-      <section title="Preparing to Seeking a Match" anchor="verify-seek">
+      <section title="Preparing to Seek a Match" anchor="verify-seek">
         <t>Once the client has constructed its list of reference identifiers and has received the server's presented identifiers in the form of a PKIX certificate, the client checks its reference identifiers against the presented identifiers for the purpose of finding a match.  The search fails if the client exhausts its list of reference identifiers without finding a match.  The search succeeds if any presented identifier matches one of the reference identifiers, at which point the client SHOULD stop the search.</t>
-        <t><list style='empty'><t>Implementation Note: A client might be configured to perform multiple searches, i.e., to match more than one reference identifier; although such behavior is not forbidden by this document, rules for matching multiple reference identifiers are a matter for implementation or future specification.</t></list></t>
+        <t><list style='empty'><t>Implementation Note: A client might be configured to perform multiple searches, i.e., to match more than one reference identifier; although such behavior is not forbidden by this specification, rules for matching multiple reference identifiers are a matter for implementation or future specification.</t></list></t>
         <t><list style='empty'><t>Security Warning: A client MUST NOT seek a match for a reference identifier of CN-ID if the presented identifiers include a DNS-ID, SRV-ID, URI-ID, or any application-specific identifier types supported by the client.</t></list></t>
         <t>Before applying the comparison rules provided in the following sections, the client might need to split the reference identifier into its DNS domain name portion and its service type portion, as follows:</t>
         <t>
@@ -390,13 +397,13 @@
         </t>
         <t>Detailed comparison rules for matching the DNS domain name portion and service type portion of the reference identifier are provided in the following sections.</t>
       </section>
-      <section title="Verifying the DNS Domain Name Portion" anchor="verify-domain">
+      <section title="Matching the DNS Domain Name Portion" anchor="verify-domain">
         <t>The client MUST match the DNS domain name portion of a reference identifier according to the following rules (and SHOULD also check the service type as described under <xref target='verify-app'/>).  The rules differ depending on whether the domain to be checked is a "traditional domain name" or an "internationalized domain name" (as defined under <xref target='names-dns'/>).  Furthermore, to meet the needs of clients that support presented identifiers containing the wildcard character '*', we define a supplemental rule for so-called "wildcard certificates".  Finally, we also specify the circumstances under which it is acceptable to check the "CN-ID" identifier type.</t>
         <section title="Checking of Traditional Domain Names" anchor="verify-domain-trad">
           <t>If the DNS domain name portion of a reference identifier is a "traditional domain name", then matching of the reference identifier against the presented identifier is performed by comparing the set of domain name labels using a case-insensitive ASCII comparison, as clarified by <xref target='DNS-CASE'/> (e.g., "WWW.Example.Com" would be lower-cased to "www.example.com" for comparison purposes).  Each label MUST match in order for the names to be considered to match, except as supplemented by the rule about checking of wildcard labels (<xref target='verify-domain-wildcards'/>).</t>
         </section>
         <section title="Checking of Internationalized Domain Names" anchor="verify-domain-idn">
-          <t>If the DNS domain name portion of a reference identifier is an internationalized domain name, then an implementation MUST convert every label in the domain name to an A-label (as described in <xref target='IDNA-DEFS'/>) before checking the domain name.  In accordance with <xref target='IDNA-PROTO'/>, a pair of A-labels MUST be compared as case-insensitive ASCII.  Each label MUST match in order for the names to be considered to match, except as supplemented by the rule about checking of wildcard labels (<xref target='verify-domain-wildcards'/>; but see also <xref target='security-wildcards'/> regarding wildcards in internationalized domain names).</t>
+          <t>If the DNS domain name portion of a reference identifier is an internationalized domain name, then an implementation MUST convert any U-labels <xref target='IDNA-DEFS'/> in the domain name to A-labels before checking the domain name.  In accordance with <xref target='IDNA-PROTO'/>, A-labels MUST be compared as case-insensitive ASCII.  Each label MUST match in order for the domain names to be considered to match, except as supplemented by the rule about checking of wildcard labels (<xref target='verify-domain-wildcards'/>; but see also <xref target='security-wildcards'/> regarding wildcards in internationalized domain names).</t>
         </section>
         <section title="Checking of Wildcard Certificates" anchor="verify-domain-wildcards">
           <t>A client employing this specification's rules MAY match the reference identifier against a presented identifier whose DNS domain name portion contains the wildcard character '*' as part or all of a label (following the definition of "label" from <xref target='DNS-CONCEPTS'/>).</t>
@@ -406,16 +413,16 @@
             <list style='numbers'>
               <t>The client SHOULD NOT attempt to match a presented identifier in which the wildcard character comprises a label other than the left-most label (e.g., do not match bar.*.example.net).<vspace blankLines='1'/></t>
               <t>If the wildcard character is the only character of the left-most label in the presented identifier, the client SHOULD NOT compare against anything but the left-most label of the reference identifier (e.g., *.example.com would match foo.example.com but not bar.foo.example.com or example.com).<vspace blankLines='1'/></t>
-              <t>The client MAY match a presented identifier in which the wildcard character is not the only character of the label (e.g., baz*.example.net and *baz.example.net and b*z.example.net would be taken to match baz1.example.net and foobaz.example.net and buzz.example.net, respectively).  However, the client SHOULD NOT attempt to match a presented identifier where the wildcard character is embedded within the labels of an internationalized domain name <xref target='IDNA-PROTO'/>, whether in the form of A-labels or U-labels <xref target='IDNA-DEFS'/>.</t>
+              <t>The client MAY match a presented identifier in which the wildcard character is not the only character of the label (e.g., baz*.example.net and *baz.example.net and b*z.example.net would be taken to match baz1.example.net and foobaz.example.net and buzz.example.net, respectively).  However, the client SHOULD NOT attempt to match a presented identifier where the wildcard character is embedded within an A-label or U-label <xref target='IDNA-DEFS'/> of an internationalized domain name <xref target='IDNA-PROTO'/>.</t>
             </list>
           </t>
         </section>
         <section title="Checking of Common Names" anchor="verify-domain-cn">
           <t>As noted, a client MUST NOT seek a match for a reference identifier of CN-ID if the presented identifiers include a DNS-ID, SRV-ID, URI-ID, or any application-specific identifier types supported by the client.</t>
-          <t>Therefore, if and only if the presented identifiers do not include a DNS-ID, SRV-ID, URI-ID, or any application-specific identifier types supported by the client, then the client MAY as a last resort check for a string whose form matches that of a fully-qualified DNS domain name in the Common Name (i.e., a CN-ID).  If the client chooses to compare a reference identifier of type CN-ID against that string, it MUST follow the comparison rules for the DNS domain name portion of an identifier of type DNS-ID, SRV-ID, or URI-ID, as described under <xref target='verify-domain-trad'/>, <xref target='verify-domain-idn'/>, and <xref target='verify-domain-wildcards'/>.</t>
+          <t>Therefore, if and only if the presented identifiers do not include a DNS-ID, SRV-ID, URI-ID, or any application-specific identifier types supported by the client, then the client MAY as a last resort check for a string whose form matches that of a fully-qualified DNS domain name in a Common Name field of the subject field (i.e., a CN-ID).  If the client chooses to compare a reference identifier of type CN-ID against that string, it MUST follow the comparison rules for the DNS domain name portion of an identifier of type DNS-ID, SRV-ID, or URI-ID, as described under <xref target='verify-domain-trad'/>, <xref target='verify-domain-idn'/>, and <xref target='verify-domain-wildcards'/>.</t>
         </section>
       </section>
-      <section title="Verifying the Application Type Portion" anchor="verify-app">
+      <section title="Matching the Application Type Portion" anchor="verify-app">
         <t>When checking identifiers of type SRV-ID and URI-ID, a client SHOULD check not only the domain name but also the service type of the application service with which it communicates.  This is a best practice because typically a client is not designed to communicate with all kinds of services using all possible application protocols, but instead is designed to communicate with one kind of service, such as websites, email services, VoIP services, or IM services.</t>
         <t>The service type is verified by means of an SRV-ID or a URI-ID.</t>
         <section title="SRV-ID" anchor="verify-app-srv">
@@ -426,7 +433,7 @@
         </section>
       </section>
       <section title="Outcome" anchor="verify-outcome">
-        <t>The outcome of the checking procedure is one of the following cases.</t>
+        <t>The outcome of the matching procedure is one of the following cases.</t>
         <section title="Case #1: Match Found" anchor="verify-outcome-matched">
           <t>If the client has found a presented identifier that matches a reference identifier, then the service identity check has succeeded.  In this case, the client MUST use the matched reference identifier as the validated identity of the application service.</t>
         </section>
@@ -452,7 +459,7 @@
         <t>This document states that the wildcard character '*' SHOULD NOT be included in presented identifiers but MAY be checked by application clients (mainly for the sake of backward compatibility with deployed infrastructure); as a result, the rules provided in this document are more restrictive than the rules for many existing application technologies (such as those excerpted under <xref target='prior'/>).  Several security considerations justify tightening the rules:</t>
         <t>
           <list style='symbols'>
-            <t>The ability to obtain a certificate containing the wildcard character might broaden the range of applications services that an attacker could forge, thus increasing (a) the chances that attackers would attempt to steal credentials needed for obtaining certificates and (b) the potential damage that would result from a successful attack.<vspace blankLines='1'/></t>
+            <t>Wildcard certificates automatically vouch for any and all host names within their domain. This can be convenient for administrators but also poses the risk of vouching for rogue or buggy hosts. See for example <xref target='Defeating-SSL'/> (beginning at slide 91) and <xref target='HTTPSbytes'/> (slides 38-40).<vspace blankLines='1'/></t>
             <t>
               Specifications for existing application technologies are not clear or consistent about the allowable location of the wildcard character, such as whether it can be:
               <vspace blankLines='1'/>
@@ -466,8 +473,8 @@
                 </list>
               These ambiguities might introduce exploitable differences in identity checking behavior among client implementations and necessitate overly complex and inefficient identity checking algorithms.
             <vspace blankLines='1'/></t>
-            <t>The inclusion of the wildcard character in certificates has led to homograph attacks involving non-ASCII characters that look similar to characters commonly included in HTTPS URLs, such as "/" and "?"; for discussion, see for example <xref target='Defeating-SSL'/> (beginning at slide 91).<vspace blankLines='1'/></t>
-            <t>There is no specification that defines how wildcards apply to the labels of an internationalized domain name <xref target='IDNA-PROTO'/>, whether in the form of A-labels or U-labels <xref target='IDNA-DEFS'/>; as a result, implementations are strongly discouraged from including or checking the wildcard character in the labels of an internationalized domain name.</t>
+            <t>There is no specification that defines how the wildcard character may be embedded within the A-labels or U-labels <xref target='IDNA-DEFS'/> of an internationalized domain name [IDNA-PROTO]; as a result, implementations are strongly discouraged from including or attempting to check for the wildcard character emdedded within A-labels and/or U-labels of an internationalized domain name.  Note, however, that a presented domain name identifier MAY contain the wildcard character where it occupies the entire leftmost label position, and where some or all of the remaining labels are A-labels or U-labels.
+            </t>
           </list>
         </t>
         <t>Notwithstanding the foregoing security considerations, specifications that re-use this one can legitimately encourage continued support for the wildcard character if they have good reasons to do so, such as backward compatibility with deployed infrastructure (see, for example, <xref target='EV-CERTS'/>).</t>
@@ -784,6 +791,23 @@ specifications of each URI scheme.
 <format type='TXT' octets='26359' target='ftp://ftp.isi.edu/in-notes/rfc5234.txt' />
 </reference>
 
+<reference anchor='HTTPSbytes' target='https://media.blackhat.com/bh-ad-10/Hansen/Blackhat-AD-2010-Hansen-Sokol-HTTPS-Can-Byte-Me-slides.pdf'>
+<front>
+<title>HTTPS Can Byte Me</title>
+<author initials='J.' surname='Sokol' fullname='Josh Sokol'>
+<organization>SecTheory Ltd.
+</organization>
+</author>
+<author initials='R.' surname='Hansen' fullname='Robert Hansen'>
+<organization>SecTheory Ltd.
+</organization>
+</author>
+<date year='2010' month='November' />
+</front>
+<seriesInfo name='BlackHat' value='Abu Dhabi' />
+<format type='PDF' target='https://media.blackhat.com/bh-ad-10/Hansen/Blackhat-AD-2010-Hansen-Sokol-HTTPS-Can-Byte-Me-slides.pdf' />
+</reference>
+
 <reference anchor='Defeating-SSL' target='http://www.blackhat.com/presentations/bh-dc-09/Marlinspike/BlackHat-DC-09-Marlinspike-Defeating-SSL.pdf'>
 <front>
 <title>New Tricks for Defeating SSL in Practice</title>
@@ -791,6 +815,7 @@ specifications of each URI scheme.
 <organization /></author>
 <date year='2009' month='February' />
 </front>
+<seriesInfo name='BlackHat' value='DC' />
 <format type='PDF' target='http://www.blackhat.com/presentations/bh-dc-09/Marlinspike/BlackHat-DC-09-Marlinspike-Defeating-SSL.pdf' />
 </reference>
 
