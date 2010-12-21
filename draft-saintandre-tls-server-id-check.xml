@@ -83,7 +83,7 @@
       </section>
 
       <section title="Applicability" anchor="applicability">
-        <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>.  Therefore, <xref target='PKIX'/> is authoritative on any point that might also be discussed in this document.  Furthermore, <xref target='PKIX'/> also governs any certificate-related topic on which this document is silent, including but limited to certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths.</t>
+        <t>This document does not supersede the rules for certificate issuance or validation provided in <xref target='PKIX'/>.  Therefore, <xref target='PKIX'/> is authoritative on any point that might also be discussed in this document.  Furthermore, <xref target='PKIX'/> also governs any certificate-related topic on which this document is silent, including but not limited to certificate syntax, certificate extensions such as name constraints and extended key usage, and handling of certification paths.</t>
         <t>This document addresses only name forms in the leaf "end entity" server certificate, not any name forms in the chain of certificates used to validate the server certificate.  Therefore, in order to ensure proper authentication, application clients need to verify the entire certification path per <xref target='PKIX'/>.</t>
         <t>This document also does not supersede the rules for verifying service identity provided in specifications for existing application protocols published prior to this BCP, such as those excerpted under <xref target='prior'/>.  However, the best current practices described here can be referenced by future specifications, including updates to specifications for existing application protocols if the relevant technology communities agree to do so.</t>
       </section>
@@ -317,7 +317,7 @@
    O=Examples-R-Us,CN=www.example.com,C=US
           ]]></artwork>
         </figure>
-        <t>However, a Common Name might contain a human-friendly string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name (a certificate with such a single Common Name will tyupically have at least one subjectAltName entry containing the fully-qualified DNS domain name):</t>
+        <t>However, the Common Name is not strongly typed because a Common Name might contain a human-friendly string for the service, rather than a string whose form matches that of a fully-qualified DNS domain name (a certificate with such a single Common Name will typically have at least one subjectAltName entry containing the fully-qualified DNS domain name):</t>
         <figure>
           <artwork><![CDATA[
    CN=A Free Chat Service,O=Example Org,C=GB
@@ -339,6 +339,18 @@
       </section>
     </section>
 
+    <section title="Protocol Checklist" anchor="checklist">
+      <t>This section provides a checklist that can be used by designers of application protocols when re-using the recommendations provided in this document.</t>
+      <t>
+        <list style='symbols'>
+          <t>Does your technology formally define DNS SRV records as identifiers for security purposes?  If so, recommend or require support for the SRV-ID identifier type.  (Note that many application technologies use DNS SRV records to find and resolve the DNS domain names of network entities, but do not rely on representations of those records in certificates as specified by <xref target='SRVNAME'/>.)<vspace blankLines='1'/></t>
+          <t>Does your technology formally define URIs as identifiers for security purposes?  If so, recommend or require support for the URI-ID identifier type.  (Note that many application technologies use URIs to identify network entities, but do not rely on those URIs in certificates.)<vspace blankLines='1'/></t>
+          <t>Does your technology need to use DNS domain names in the Common Name of certificates for the sake of backward compatibility?  If so, recommend support for the CN-ID identifier type as a fallback.<vspace blankLines='1'/></t>
+          <t>Does your technology need to allow the wildcard character in DNS domain names?  If so, recommend support for wildcard certificates, and specify exactly where the wildcard character is allowed to occur (e.g., only the complete left-most label of a DNS domain name).</t>
+        </list>
+      </t>
+    </section>
+
     <section title="Representation of Server Identity" anchor="representation">
       <section title="Rules" anchor="representation-rules">
         <t>When a certification authority issues a certificate based on the fully-qualified DNS domain name at which the application service provider will provide the relevant application, the following rules apply to the representation of application service identities.  The reader needs to be aware that some of these rules are cumulative and can interact in important ways that are illustrated later in this document.</t>
@@ -355,10 +367,10 @@
         </t>
       </section>
       <section title="Examples" anchor="representation-examples">
-        <t>Consider a simple website at "www.example.com", which is not discoverable via DNS SRV lookups.  A certificate for this service might include only a DNS-ID of "www.example.com".</t>
-        <t>Consider an IMAP-accessible email server at "mail.example.net" servicing email addresses of the form "user@example.net" and discoverable via DNS SRV lookups on the "example.net" domain.  A certificate for this service might include SRV-IDs of "_imap.example.net" and "_imaps.example.net" (see <xref target='EMAIL-SRV'/>) along with a DNS-ID of "example.net".</t>
-        <t>Consider a SIP-accessible voice-over-IP (VoIP) server at "voice.example.edu" servicing SIP addresses of the form "user@voice.example.edu" and identified by a URI of &lt;sip:voice.example.edu&gt;.  A certificate for this service would include a URI-ID of "sip:voice.example.edu" (see <xref target='SIP-CERTS'/>).</t>
-        <t>Consider an XMPP-compatible instant messaging (IM) server at "im.example.org" servicing IM addresses of the form "user@im.example.org" and discoverable via DNS SRV lookups on the "im.example.org" domain.  A certificate for this service might include SRV-IDs of "_xmpp-client.im.example.org" and "_xmpp-server.im.example.org" (see <xref target='XMPP'/>), a DNS-ID of "im.example.org", and an XMPP-specific "XmppAddr" of "im.example.org" (see <xref target='XMPP'/>).</t>
+        <t>Consider a simple website at "www.example.com", which is not discoverable via DNS SRV lookups.  Because HTTP does not use URIs for security purposes, a certificate for this service might include only a DNS-ID of "www.example.com".</t>
+        <t>Consider an IMAP-accessible email server at the host "mail.example.net" servicing email addresses of the form "user@example.net" and discoverable via DNS SRV lookups on the application service name of "example.net".  A certificate for this service might include SRV-IDs of "_imap.example.net" and "_imaps.example.net" (see <xref target='EMAIL-SRV'/>) along with a DNS-ID of "example.net".</t>
+        <t>Consider a SIP-accessible voice-over-IP (VoIP) server at the host "voice.example.edu" servicing SIP addresses of the form "user@voice.example.edu" and identified by a URI of &lt;sip:voice.example.edu&gt;.  A certificate for this service would include a URI-ID of "sip:voice.example.edu" (see <xref target='SIP-CERTS'/>) along with a DNS-ID of "voice.example.edu".</t>
+        <t>Consider an XMPP-compatible instant messaging (IM) server at the host "im.example.org" servicing IM addresses of the form "user@im.example.org" and discoverable via DNS SRV lookups on the "im.example.org" domain.  A certificate for this service might include SRV-IDs of "_xmpp-client.im.example.org" and "_xmpp-server.im.example.org" (see <xref target='XMPP'/>), a DNS-ID of "im.example.org", and an XMPP-specific "XmppAddr" of "im.example.org" (see <xref target='XMPP'/>).</t>
       </section>
     </section>
 
@@ -442,7 +454,7 @@
         </section>
       </section>
       <section title="Matching the Application Type Portion" anchor="verify-app">
-        <t>When checking identifiers of type SRV-ID and URI-ID, a client SHOULD check not only the domain name but also the service type of the application service with which it communicates.  This is a best practice because typically a client is not designed to communicate with all kinds of services using all possible application protocols, but instead is designed to communicate with one kind of service, such as websites, email services, VoIP services, or IM services.</t>
+        <t>When checking identifiers of type SRV-ID and URI-ID, a client SHOULD also check the service type of the application service with which it communicates (in addition to checking the domain name as described above).  This is a best practice because typically a client is not designed to communicate with all kinds of services using all possible application protocols, but instead is designed to communicate with one kind of service, such as websites, email services, VoIP services, or IM services.</t>
         <t>The service type is verified by means of an SRV-ID or a URI-ID.</t>
         <section title="SRV-ID" anchor="verify-app-srv">
           <t>The service name portion of an SRV-ID (e.g., "imaps") MUST be matched in a case-insensitive manner, in accordance with <xref target='DNS-SRV'/>.  Note that the "_" character is prepended to the service identifier in DNS SRV records and in SRV-IDs (per <xref target='SRVNAME'/>), and thus does not need to be included in any comparison.</t>
@@ -468,18 +480,6 @@
           <t>Otherwise, if the client is an automated application not directly controlled by a human user, then it SHOULD terminate the communication attempt with a bad certificate error and log the error appropriately.  An automated application MAY provide a configuration setting that disables this behavior, but MUST enable the behavior by default.</t>
         </section>
       </section>
-    </section>
-
-    <section title="Protocol Checklist" anchor="checklist">
-      <t>This section provides a checklist that can be used by designers of application protocols when re-using the recommendations provided in this document.</t>
-      <t>
-        <list style='symbols'>
-          <t>Does your technology formally define DNS SRV records as identifiers for security purposes?  Note that many application technologies use DNS SRV records to find and resolve the DNS domain names of network entities, but do not rely on representations of those records in certificates as specified by <xref target='SRVNAME'/>.</t>
-          <t>Does your technology formally define URIs as identifiers for security purposes?  Note that many application technologies use URIs to identify network entities, but do not rely on those URIs in certificates.</t>
-          <t>Does your technology need to use DNS domain names in the Common Name of certificates for the sake of backward compatibility?</t>
-          <t>Does your technology need to allow wildcards in DNS domain names?</t>
-        </list>
-      </t>
     </section>
 
     <section title="Security Considerations" anchor="security">
