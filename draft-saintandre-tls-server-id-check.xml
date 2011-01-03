@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="December" day="22" year="2010"/>
+    <date month="January" day="3" year="2011"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -249,7 +249,7 @@
           </list>
         </t>
         <t>Most security-related terms in this document are to be understood in the sense defined in <xref target="SECTERMS"/>; such terms include, but are not limited to, "attack", "authentication", "authorization", "certification authority", "certification path", "certificate", "credential", "identity", "self-signed certificate", "trust", "trust anchor", "trust chain", "validate", and "verify".</t>
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='KEYWORDS'/>.</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 <xref target='KEYWORDS'/>.</t>
       </section>
 
     </section>
@@ -361,7 +361,7 @@
           <list style='numbers'>
             <t>The certificate SHOULD include a "DNS-ID" if possible as a baseline for interoperability.<vspace blankLines='1'/></t>
             <t>If the service using the certificate deploys a technology for which the relevant specification stipulates that certificates ought to include identifiers of type SRV-ID (e.g., this is true of <xref target='XMPP'/>), then the certificate SHOULD include an SRV-ID.<vspace blankLines='1'/></t>
-            <t>If the service using the certificate deploys a technology for which the relevant specification stipulates that certificates ought to incldue identifiers of type URI-ID (e.g., this is true of <xref target='SIP'/> as specified by <xref target='SIP-CERTS'/>, but not true of <xref target='HTTP'/> since <xref target='HTTP-TLS'/> does not describe usage of a URI-ID for HTTP services), then the certificate SHOULD include a URI-ID.  The scheme SHALL be that of the protocol associated with the service type and the "host" component (or its equivalent) SHALL be the fully-qualified DNS domain name of the service.  A specification that re-uses this one MUST specify which URI schemes are to be considered acceptable in URI-IDs contained in PKIX certificates used for the application protocol (e.g., "sip" but not "sips" or "tel" for SIP as described in <xref target='SIP-SIPS'/>, or perhaps http and https for HTTP as might be described in a future specification).<vspace blankLines='1'/></t>
+            <t>If the service using the certificate deploys a technology for which the relevant specification stipulates that certificates ought to include identifiers of type URI-ID (e.g., this is true of <xref target='SIP'/> as specified by <xref target='SIP-CERTS'/>, but not true of <xref target='HTTP'/> since <xref target='HTTP-TLS'/> does not describe usage of a URI-ID for HTTP services), then the certificate SHOULD include a URI-ID.  The scheme SHALL be that of the protocol associated with the service type and the "host" component (or its equivalent) SHALL be the fully-qualified DNS domain name of the service.  A specification that re-uses this one MUST specify which URI schemes are to be considered acceptable in URI-IDs contained in PKIX certificates used for the application protocol (e.g., "sip" but not "sips" or "tel" for SIP as described in <xref target='SIP-SIPS'/>, or perhaps http and https for HTTP as might be described in a future specification).<vspace blankLines='1'/></t>
             <t>The certificate MAY include other application-specific identifiers for types that were defined before publication of <xref target='SRVNAME'/> (e.g., XmppAddr for <xref target='XMPP'/>) or for which service names or URI schemes do not exist; however, such application-specific identifiers are not applicable to all application technologies and therefore are out of scope for this specification.<vspace blankLines='1'/></t>
             <t>Even though many deployed clients still check for the CN-ID within the certificate subject field, certification authorities are encouraged to migrate away from issuing certificates that represent the server's fully-qualified DNS domain name in a CN-ID.  Therefore the certificate SHOULD NOT include a CN-ID unless the certification authority issues the certificate in accordance with a specification that re-uses this one and that explicitly encourages continued support for the CN-ID identifier type in the context of a given application technology.<vspace blankLines='1'/></t>
             <t>The certificate MAY contain more than one DNS-ID, SRV-ID, or URI-ID but SHOULD NOT contain more than one CN-ID, as further explained under <xref target='security-multi'/>.<vspace blankLines='1'/></t>
@@ -370,10 +370,10 @@
         </t>
       </section>
       <section title="Examples" anchor="represent-examples">
-        <t>Consider a simple website at "www.example.com", which is not discoverable via DNS SRV lookups.  Because HTTP does not use URIs for security purposes, a certificate for this service might include only a DNS-ID of "www.example.com".</t>
-        <t>Consider an IMAP-accessible email server at the host "mail.example.net" servicing email addresses of the form "user@example.net" and discoverable via DNS SRV lookups on the application service name of "example.net".  A certificate for this service might include SRV-IDs of "_imap.example.net" and "_imaps.example.net" (see <xref target='EMAIL-SRV'/>) along with a DNS-ID of "example.net".</t>
-        <t>Consider a SIP-accessible voice-over-IP (VoIP) server at the host "voice.example.edu" servicing SIP addresses of the form "user@voice.example.edu" and identified by a URI of &lt;sip:voice.example.edu&gt;.  A certificate for this service would include a URI-ID of "sip:voice.example.edu" (see <xref target='SIP-CERTS'/>) along with a DNS-ID of "voice.example.edu".</t>
-        <t>Consider an XMPP-compatible instant messaging (IM) server at the host "im.example.org" servicing IM addresses of the form "user@im.example.org" and discoverable via DNS SRV lookups on the "im.example.org" domain.  A certificate for this service might include SRV-IDs of "_xmpp-client.im.example.org" and "_xmpp-server.im.example.org" (see <xref target='XMPP'/>), a DNS-ID of "im.example.org", and an XMPP-specific "XmppAddr" of "im.example.org" (see <xref target='XMPP'/>).</t>
+        <t>Consider a simple website at "www.example.com", which is not discoverable via DNS SRV lookups.  Because HTTP does not specify the use of URIs in server certificates, a certificate for this service might include only a DNS-ID of "www.example.com".  It might also include a CN-ID of "www.example.com" for backward compatibility with deployed infrastructure.</t>
+        <t>Consider an IMAP-accessible email server at the host "mail.example.net" servicing email addresses of the form "user@example.net" and discoverable via DNS SRV lookups on the application service name of "example.net".  A certificate for this service might include SRV-IDs of "_imap.example.net" and "_imaps.example.net" (see <xref target='EMAIL-SRV'/>) along with a DNS-ID of "example.net" and "mail.example.net".  It might also include a CN-ID of "example.net" and "mail.example.net" for backward compatibility with deployed infrastructure.</t>
+        <t>Consider a SIP-accessible voice-over-IP (VoIP) server at the host "voice.example.edu" servicing SIP addresses of the form "user@voice.example.edu" and identified by a URI of &lt;sip:voice.example.edu&gt;.  A certificate for this service would include a URI-ID of "sip:voice.example.edu" (see <xref target='SIP-CERTS'/>) along with a DNS-ID of "voice.example.edu".  It might also include a CN-ID of "voice.example.edu" for backward compatibility with deployed infrastructure.</t>
+        <t>Consider an XMPP-compatible instant messaging (IM) server at the host "im.example.org" servicing IM addresses of the form "user@im.example.org" and discoverable via DNS SRV lookups on the "im.example.org" domain.  A certificate for this service might include SRV-IDs of "_xmpp-client.im.example.org" and "_xmpp-server.im.example.org" (see <xref target='XMPP'/>), a DNS-ID of "im.example.org", and an XMPP-specific "XmppAddr" of "im.example.org" (see <xref target='XMPP'/>).  It might also include a CN-ID of "im.example.org" for backward compatibility with deployed infrastructure.</t>
       </section>
     </section>
 
@@ -410,7 +410,7 @@
             <list style='symbols'>
               <t>The list MUST include a DNS-ID.  A reference identifier of type DNS-ID can be directly constructed from a fully-qualified DNS domain name that is (a) contained in or securely derived from the inputs (i.e., the source domain), or (b) explicitly associated with the source domain by means of user configuration (i.e., a derived domain).<vspace blankLines='1'/></t>
               <t>If a server for the service type is typically discovered by means of DNS SRV records, then the list SHOULD include an SRV-ID.<vspace blankLines='1'/></t>
-              <t>If a server for the service type is typically associated with a URI for security purposes, then the list SHOULD include a URI-ID.<vspace blankLines='1'/></t>
+              <t>If a server for the service type is typically associated with a URI for security purposes (i.e., a formal protocol document specifies the use of URIs in server certificates), then the list SHOULD include a URI-ID.<vspace blankLines='1'/></t>
               <t>The list MAY include a CN-ID, mainly for the sake of backward compatibility with deployed infrastructure.</t>
             </list>
           </t>
@@ -516,7 +516,7 @@
                 </list>
               These ambiguities might introduce exploitable differences in identity checking behavior among client implementations and necessitate overly complex and inefficient identity checking algorithms.
             <vspace blankLines='1'/></t>
-            <t>There is no specification that defines how the wildcard character may be embedded within the A-labels or U-labels <xref target='IDNA-DEFS'/> of an internationalized domain name [IDNA-PROTO]; as a result, implementations are strongly discouraged from including or attempting to check for the wildcard character emdedded within A-labels and/or U-labels of an internationalized domain name.  Note, however, that a presented domain name identifier MAY contain the wildcard character where it occupies the entire leftmost label position, and where some or all of the remaining labels are A-labels or U-labels.
+            <t>There is no specification that defines how the wildcard character may be embedded within the A-labels or U-labels <xref target='IDNA-DEFS'/> of an internationalized domain name [IDNA-PROTO]; as a result, implementations are strongly discouraged from including or attempting to check for the wildcard character emdedded within A-labels and/or U-labels of an internationalized domain name (e.g., "xn--kcry6tjko*.example").  Note, however, that a presented domain name identifier MAY contain the wildcard character as long as that character occupies the entire left-most label position, where some or all of the remaining labels are A-labels or U-labels (e.g., "*.xn--kcry6tjko.example").
             </t>
           </list>
         </t>
@@ -1867,12 +1867,12 @@ specifications of each URI scheme.
 <author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
     <organization />
 </author>
-<date month='November' day='17' year='2010' />
+<date month='December' day='20' year='2010' />
 <abstract><t>This document defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a technology for streaming Extensible Markup Language (XML) elements for the purpose of exchanging structured information in close to real time between any two or more network-aware entities.  XMPP provides a generalized, extensible framework for incrementally exchanging XML data, upon which a variety of applications can be built.  The framework includes methods for stream setup and teardown, channel encryption, authentication of a client to a server and of one server to another server, and primitives for push-style messages, publication of network availability information ("presence"), and request-response interactions.  This document also specifies the format for XMPP addresses, which are fully internationalizable.  This document obsoletes RFC 3920.</t></abstract>
 </front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-19' />
+<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-3920bis-22' />
 <format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-19.txt' />
+        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-3920bis-22.txt' />
 </reference>
 
 <reference anchor='XMPP-OLD'>
