@@ -42,7 +42,7 @@
       </address>
     </author> 
 
-    <date month="January" day="3" year="2011"/>
+    <date month="January" day="4" year="2011"/>
 
     <area>Applications</area>
     <keyword>Internet-Draft</keyword>
@@ -456,7 +456,7 @@
             <list style='numbers'>
               <t>The client SHOULD NOT attempt to match a presented identifier in which the wildcard character comprises a label other than the left-most label (e.g., do not match bar.*.example.net).<vspace blankLines='1'/></t>
               <t>If the wildcard character is the only character of the left-most label in the presented identifier, the client SHOULD NOT compare against anything but the left-most label of the reference identifier (e.g., *.example.com would match foo.example.com but not bar.foo.example.com or example.com).<vspace blankLines='1'/></t>
-              <t>The client MAY match a presented identifier in which the wildcard character is not the only character of the label (e.g., baz*.example.net and *baz.example.net and b*z.example.net would be taken to match baz1.example.net and foobaz.example.net and buzz.example.net, respectively).  However, the client SHOULD NOT attempt to match a presented identifier where the wildcard character is embedded within an A-label or U-label <xref target='IDNA-DEFS'/> of an internationalized domain name <xref target='IDNA-PROTO'/>.</t>
+              <t>The client MAY match a presented identifier in which the wildcard character is not the only character of the label (e.g., baz*.example.net and *baz.example.net and b*z.example.net would be taken to match baz1.example.net and foobaz.example.net and buzz.example.net, respectively).  However, the client SHOULD NOT attempt to match a presented identifier where the wildcard character is embedded within an NR-LDH label, A-label, or U-label <xref target='IDNA-DEFS'/> of an internationalized domain name <xref target='IDNA-PROTO'/>.</t>
             </list>
           </t>
         </section>
@@ -516,7 +516,7 @@
                 </list>
               These ambiguities might introduce exploitable differences in identity checking behavior among client implementations and necessitate overly complex and inefficient identity checking algorithms.
             <vspace blankLines='1'/></t>
-            <t>There is no specification that defines how the wildcard character may be embedded within the A-labels or U-labels <xref target='IDNA-DEFS'/> of an internationalized domain name [IDNA-PROTO]; as a result, implementations are strongly discouraged from including or attempting to check for the wildcard character emdedded within A-labels and/or U-labels of an internationalized domain name (e.g., "xn--kcry6tjko*.example").  Note, however, that a presented domain name identifier MAY contain the wildcard character as long as that character occupies the entire left-most label position, where some or all of the remaining labels are A-labels or U-labels (e.g., "*.xn--kcry6tjko.example").
+            <t>There is no specification that defines how the wildcard character may be embedded within the NR-LDH labels, A-labels, or U-labels <xref target='IDNA-DEFS'/> of an internationalized domain name [IDNA-PROTO]; as a result, implementations are strongly discouraged from including or attempting to check for the wildcard character emdedded within NR-LDH labels, A-labels, or U-labels of an internationalized domain name (e.g., "xn--kcry6tjko*.example.org").  Note, however, that a presented domain name identifier MAY contain the wildcard character as long as that character occupies the entire left-most label position, where some or all of the remaining labels are NR-LDH labels, A-labels, or U-labels (e.g., "*.xn--kcry6tjko.example.org").
             </t>
           </list>
         </t>
